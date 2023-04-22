@@ -25,4 +25,8 @@ public class Parking implements Serializable {
             foreignKey = @ForeignKey(name = "fk_parking_location"))
     private Location locationId;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "members_id",
+            foreignKey = @ForeignKey(name = "fk_parking_members"))
+    private Members membersId;
 }
