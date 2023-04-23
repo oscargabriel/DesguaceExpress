@@ -1,29 +1,128 @@
 package com.DesguaceExpress.main.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
+
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+//@AllArgsConstructor
+//@NoArgsConstructor
+@Builder
+//@Data
+
+@Table(name = "members")
 public class Members implements Serializable {
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    private Long id;
 
-    String Document;
+    @Column(name = "document", nullable = false)
+    private String document;
 
-    String FirstName;
 
-    String LastName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    Integer Phone;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
-    String Email;
+    @Column(name = "phone", nullable = false)
+    private Long phone;
 
-    Date CreateOn;
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "create_on", nullable = true)
+    @CreationTimestamp
+    private LocalDateTime createOn;
+
+    public Members() {
+    }
+
+    private Members(Long id, String document, String firstName, String lastName, Long phone, String email, LocalDateTime createOn) {
+        this.id = id;
+        this.document = document;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.createOn = createOn;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(Long phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDateTime getCreateOn() {
+        return createOn;
+    }
+
+    public void setCreateOn(LocalDateTime createOn) {
+        this.createOn = createOn;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Members{" +
+                "id=" + id +
+                ", document='" + document + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone=" + phone +
+                ", email='" + email + '\'' +
+                ", createOn=" + createOn +
+                '}';
+    }
 }

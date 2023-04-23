@@ -1,25 +1,37 @@
 package com.DesguaceExpress.main.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 import java.io.Serializable;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Builder
+@Table(name = "location")
 public class Location implements Serializable {
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
 
-    String Country;
+    private Long id;
 
-    String Departament;
+    @Column(name = "country", nullable = false)
+    private String country;
 
-    String State;
+    @Column(name = "departament", nullable = false)
+    private String departament;
 
-    String Ubication;
+    @Column(name = "state", nullable = false)
+    private String state;
+
+    @Column(name = "ubication", nullable = false)
+    private String ubication;
 }

@@ -14,7 +14,7 @@
 	<name>DesguaceExpress</name>
 	<description>hola mundo</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>19</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,6 +47,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<!--
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-envers</artifactId>
+			<version>6.1.7.Final</version>
+		</dependency>-->
 	</dependencies>
 
 	<build>

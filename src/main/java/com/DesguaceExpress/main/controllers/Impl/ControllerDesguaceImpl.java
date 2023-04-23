@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 public class ControllerDesguaceImpl implements ControllerDesguace {
 
@@ -18,13 +19,16 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
     ServiceDesguace serviceDesguace;
 
+
+
     public ControllerDesguaceImpl(ServiceDesguaceImpl serviceDesguace) {
         this.serviceDesguace = serviceDesguace;
     }
 
     @Override
     @PostMapping("Associate/register")
-    public ResponseEntity<String> CrearSocio(@RequestBody Members associate) {
-        return ResponseEntity.ok().body("se registro");
+    public ResponseEntity<String> CrearSocio(@RequestBody Members members) {
+        System.out.println(members);
+        return ResponseEntity.ok().body(serviceDesguace.crearSocio(members));
     }
 }
