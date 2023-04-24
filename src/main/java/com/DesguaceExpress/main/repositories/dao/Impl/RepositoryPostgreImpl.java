@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.repositories.dao.Impl;
 
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
+import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import jakarta.persistence.EntityManager;
@@ -85,9 +86,21 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     public Vehicle findVehicleByLicensePlate(String licensePlate) {
 
         TypedQuery<Vehicle> query = entityManager.createQuery(
-                "FROM Vehicle v" +
+                "FROM Vehicle v " +
                         "WHERE v.licensePlate=:licensePlate",Vehicle.class);
-        query.setParameter(licensePlate,licensePlate);
+        query.setParameter("licensePlate",licensePlate);
         return query.getSingleResult();
+    }
+
+    @Override
+    public Parking findParkingById(Long id) {
+        System.err.println(id);
+        TypedQuery<Parking> query = entityManager.createQuery(
+                "FROM Parking p " +
+                        "WHERE p.id=:id",Parking.class);
+        query.setParameter("id",id);
+        Parking p = query.getSingleResult();
+        System.out.println(p.getName());
+        return p;
     }
 }

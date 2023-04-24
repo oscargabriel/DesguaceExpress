@@ -17,7 +17,7 @@ public interface ServiceDesguace {
     // parqueaderos y cuantas veces han sido
     public List<Top10VehicleInParking> TopVehicleInParking();
 
-    public ResponseEntity<HashMap<String,Long>> RegistrarEntrada(String licensePlate, Long idParking);
+    public HashMap<String,Long> RegistrarEntrada(String licensePlate, Long idParking);
 
     public String crearSocio(Members members);
 }

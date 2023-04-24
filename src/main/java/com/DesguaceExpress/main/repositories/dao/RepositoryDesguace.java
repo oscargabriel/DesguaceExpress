@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.repositories.dao;
 
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
+import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
 import org.springframework.http.ResponseEntity;
 
@@ -27,6 +28,8 @@ public interface RepositoryDesguace {
 
 
     public Vehicle findVehicleByLicensePlate(String licensePlate);
+
+    public Parking findParkingById(Long id);
 
 
 }

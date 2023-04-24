@@ -7,6 +7,7 @@ import com.DesguaceExpress.main.entities.VehicleParking;
 import com.DesguaceExpress.main.repositories.dao.Impl.RepositoryPostgreImpl;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import com.DesguaceExpress.main.repositories.jpa.MembersRepository;
+import com.DesguaceExpress.main.repositories.jpa.VehicleParkingRepository;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Autowired
     MembersRepository membersRepository;
 
+    @Autowired
+    VehicleParkingRepository vehicleParkingRepository;
+
     public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace) {
         this.repositoryDesguace = repositoryDesguace;
     }
@@ -35,13 +39,20 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
 
     @Override
-    public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(String licensePlate, Long idParking) {
+    public HashMap<String, Long> RegistrarEntrada(String licensePlate, Long idParking) {
         VehicleParking vehicleParking = VehicleParking.builder()
                 .id(repositoryDesguace.VehicleParkingID())
-
+                .parkingId(repositoryDesguace.findParkingById(idParking))
+                .vehicleId(repositoryDesguace.findVehicleByLicensePlate(licensePlate))
                 .build();
-        return null;
+        HashMap<String,Long> hashMap = new HashMap<>();
+        hashMap.put("id",vehicleParkingRepository.save(vehicleParking).getId());
+
+        return hashMap;
     }
+
+
+
 
     @Override
     public String crearSocio(Members members) {

@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.controllers.Impl;
 
 import com.DesguaceExpress.main.controllers.ControllerDesguace;
+import com.DesguaceExpress.main.dto.LogIn;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.services.Impl.ServiceDesguaceImpl;
@@ -39,9 +40,10 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
     @Override
     @PostMapping("vehiculo/registrarEntrada")
-    public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(String licensePlate, Long idParking) {
-        serviceDesguace.RegistrarEntrada(licensePlate,idParking);
-        return null;
+    public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(@RequestBody LogIn logIn) {
+        return ResponseEntity.ok().body(
+                serviceDesguace.RegistrarEntrada(logIn.getLicencePlate(),logIn.getIdParking())
+        );
     }
 
     @Override

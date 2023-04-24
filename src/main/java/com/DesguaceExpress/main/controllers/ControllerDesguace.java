@@ -1,5 +1,6 @@
 package com.DesguaceExpress.main.controllers;
 
+import com.DesguaceExpress.main.dto.LogIn;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.entities.Members;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public interface ControllerDesguace {
     public ResponseEntity<List<Top10VehicleInParking>> TopVehicleInParking();
 
 
-    public ResponseEntity<HashMap<String,Long>> RegistrarEntrada(@RequestBody String licensePlate, Long idParking);
+    public ResponseEntity<HashMap<String,Long>> RegistrarEntrada(@RequestBody LogIn logIn);
 
     public ResponseEntity<String> CrearSocio(@RequestBody Members members);
 
