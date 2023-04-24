@@ -4,12 +4,14 @@ import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.VehicleParking;
+import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
 import com.DesguaceExpress.main.repositories.dao.Impl.RepositoryPostgreImpl;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import com.DesguaceExpress.main.repositories.jpa.MembersRepository;
 import com.DesguaceExpress.main.repositories.jpa.VehicleParkingRepository;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +47,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
                 .parkingId(repositoryDesguace.findParkingById(idParking))
                 .vehicleId(repositoryDesguace.findVehicleByLicensePlate(licensePlate))
                 .build();
+        //si no hay vehiculo asociado al parqueadero genera una excepcion y no registra la entrada
+        if(vehicleParking.getParkingId().getMembersId()==null){
+            throw new NoMemberInTheParking(HttpStatus.NOT_ACCEPTABLE, vehicleParking.getParkingId().getName());
+        }
         HashMap<String,Long> hashMap = new HashMap<>();
         hashMap.put("id",vehicleParkingRepository.save(vehicleParking).getId());
-
         return hashMap;
     }
 

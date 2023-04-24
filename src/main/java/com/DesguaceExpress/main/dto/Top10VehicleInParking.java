@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
-
-import java.io.Serializable;
+/**
+ * clase para la estructura de los datos que se muestran de los 10 vehiculos que mas han registrado entradas
+ * en los diferentes paqueaderos
+ */
 
 @AllArgsConstructor
 @Data

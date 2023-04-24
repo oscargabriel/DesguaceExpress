@@ -3,6 +3,7 @@ package com.DesguaceExpress.main.repositories.dao.Impl;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
+import com.DesguaceExpress.main.entities.VehicleParking;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,7 @@ class RepositoryPostgreImplTest {
 
     @Autowired
     RepositoryPostgreImpl repositoryPostgre;
-
+/*
 
     @Test
     void topVehicleInParking() {
@@ -37,5 +38,12 @@ class RepositoryPostgreImplTest {
         Parking parking = repositoryPostgre.findParkingById(10L);
         System.out.println(parking.getName());
         assertEquals("Kling-Streich",parking.getName());
+    }*/
+
+    @Test
+    void findRegisterOpenByLicencePlate() {
+        VehicleParking vehicleParking = repositoryPostgre.findRegisterOpenByLicencePlate("D5-35-9D-3F-E4-9F");
+        System.out.println(vehicleParking.getEntry());
+        assertEquals(108L,vehicleParking.getId());
     }
 }

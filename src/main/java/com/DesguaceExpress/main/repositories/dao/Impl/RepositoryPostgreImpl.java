@@ -3,19 +3,21 @@ package com.DesguaceExpress.main.repositories.dao.Impl;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
+import com.DesguaceExpress.main.entities.VehicleParking;
+import com.DesguaceExpress.main.exception.custom.DataNotFound;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * implementacion del repositorio, se usa una base de datos de PostgreSQL, se hacen las consultas con EntityManager
+ * y se hacen mediante HQL como dialecto para consultar
+ */
 @Repository
 public class RepositoryPostgreImpl implements RepositoryDesguace {
 
@@ -53,8 +55,6 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         return query.getSingleResult()+1L;
     }
 
-    //regresar los 10 vehículos que más veces se han registrado en los diferentes parqueaderos y
-    // cuantas veces han sido
     @Override
     public List<Top10VehicleInParking> TopVehicleInParking() {
         List<Top10VehicleInParking> top10Vehicle = new ArrayList<Top10VehicleInParking>();
@@ -84,23 +84,40 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
 
     @Override
     public Vehicle findVehicleByLicensePlate(String licensePlate) {
-
         TypedQuery<Vehicle> query = entityManager.createQuery(
                 "FROM Vehicle v " +
                         "WHERE v.licensePlate=:licensePlate",Vehicle.class);
         query.setParameter("licensePlate",licensePlate);
-        return query.getSingleResult();
+        Vehicle vehicle = query.getSingleResult();
+        if(vehicle==null){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"la placa "+licensePlate);
+        }
+        return vehicle;
     }
 
     @Override
     public Parking findParkingById(Long id) {
-        System.err.println(id);
         TypedQuery<Parking> query = entityManager.createQuery(
                 "FROM Parking p " +
                         "WHERE p.id=:id",Parking.class);
         query.setParameter("id",id);
-        Parking p = query.getSingleResult();
-        System.out.println(p.getName());
-        return p;
+        Parking parking = query.getSingleResult();
+        if(parking==null){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero con id "+id);
+        }
+        return parking;
+    }
+
+    @Override//TODO: revisar codigo HQL
+    public VehicleParking findRegisterOpenByLicencePlate(String licensePlate) {
+        TypedQuery<VehicleParking> query = entityManager.createQuery(
+                "SELECT vp.id, vp.entry, vp.exit, vp.vehicleId, vp.parkingId " +
+                        "FROM VehicleParking vp " +
+                        "JOIN Vehicle v ON v.id = vp.vehicleId " +
+                        "WHERE vp.exit = NULL AND v.licencePlate =:licensePlate ",VehicleParking.class
+        );
+        query.setParameter("licensePlate", licensePlate);
+        VehicleParking vehicleParking = query.getSingleResult();
+        return vehicleParking;
     }
 }
