@@ -18,7 +18,7 @@ public class Vehicle implements Serializable {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "license_plate", nullable = false)
+    @Column(name = "license_plate", nullable = false, unique = true)
     private String licensePlate;
 
     @Column(name = "type", nullable = false)
@@ -31,7 +31,7 @@ public class Vehicle implements Serializable {
     private String model;
 
     @Column(name = "year", nullable = false)
-    private String year;
+    private Integer year;
 
     @Column(name = "create_on", nullable = true)
     private LocalDateTime createOn;
@@ -45,7 +45,7 @@ public class Vehicle implements Serializable {
     public Vehicle() {
     }
 
-    private Vehicle(Long id, String licensePlate, String type, String make, String model, String year, LocalDateTime createOn, Members membersId) {
+    private Vehicle(Long id, String licensePlate, String type, String make, String model, Integer year, LocalDateTime createOn, Members membersId) {
         this.id = id;
         this.licensePlate = licensePlate;
         this.type = type;
@@ -96,11 +96,11 @@ public class Vehicle implements Serializable {
         this.model = model;
     }
 
-    public String getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

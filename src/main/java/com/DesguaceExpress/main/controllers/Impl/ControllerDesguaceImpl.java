@@ -1,8 +1,9 @@
 package com.DesguaceExpress.main.controllers.Impl;
 
 import com.DesguaceExpress.main.controllers.ControllerDesguace;
-import com.DesguaceExpress.main.dto.LogIn;
+import com.DesguaceExpress.main.dto.Tiket;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
+import com.DesguaceExpress.main.dto.VehicleByParking;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.services.Impl.ServiceDesguaceImpl;
 import com.DesguaceExpress.main.services.ServiceDesguace;
@@ -41,10 +42,24 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
     @Override
     @PostMapping("vehiculo/registrarEntrada")
-    public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(@RequestBody LogIn logIn) {
+    public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(@RequestBody Tiket tiket) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                serviceDesguace.RegistrarEntrada(logIn.getLicencePlate(),logIn.getIdParking())
+                serviceDesguace.RegistrarEntrada(tiket.getLicencePlate(), tiket.getIdParking())
         );
+    }
+
+    @Override
+    @PostMapping("vehiculo/registrarSalida")
+    public ResponseEntity<HashMap<String, String>> RegistrarSalida(@RequestBody Tiket tiket) {
+        return ResponseEntity.ok().body(
+                serviceDesguace.RegistrarSalida(tiket.getLicencePlate(),tiket.getIdParking())
+        );
+    }
+
+    @Override
+    @GetMapping("VehicleByParking")
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(String parking) {
+        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByParking(parking));
     }
 
     @Override

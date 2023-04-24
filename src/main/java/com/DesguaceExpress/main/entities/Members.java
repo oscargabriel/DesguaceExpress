@@ -19,7 +19,7 @@ public class Members implements Serializable {
     @Id
     private Long id;
 
-    @Column(name = "document", nullable = false)
+    @Column(name = "document", nullable = false, unique = true)
     private String document;
 
 
@@ -29,10 +29,10 @@ public class Members implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone", nullable = false, unique = true)
     private Long phone;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "create_on", nullable = true)

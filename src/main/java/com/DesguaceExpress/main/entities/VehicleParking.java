@@ -45,9 +45,20 @@ public class VehicleParking implements Serializable {
             foreignKey = @ForeignKey(name = "fk_parking_vehicleparking"))
     private Parking parkingId;
 
+    /**
+     * asigna la infomacion de ingreso automaticamente al ingresar al parqueadero
+     */
     @PrePersist
     private void prePersist(){
         this.entry= LocalDateTime.now();
+    }
+
+    /**
+     * asigna la infomacion de salida automaticamente al actualizar el registro
+     */
+    @PreUpdate
+    private void preUpdate(){
+        this.exit=LocalDateTime.now();
     }
 
 }

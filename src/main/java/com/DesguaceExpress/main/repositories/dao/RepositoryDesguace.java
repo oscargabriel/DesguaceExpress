@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.repositories.dao;
 
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
+import com.DesguaceExpress.main.dto.VehicleByParking;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
 import com.DesguaceExpress.main.entities.VehicleParking;
@@ -47,7 +48,23 @@ public interface RepositoryDesguace {
      */
     public Parking findParkingById(Long id);
 
+    /**
+     * busca un parqueadero en la bd dado una id, si no la encuentra genera una excepcion y ExcepcionController
+     * envia el mensaje de regreso
+     * @param parking String del nombre del parqueadero
+     * @return parqueadero
+     */
+    public Parking findParkingByName(String parking);
 
+    /**
+     * apartir de una placa busca si existe registro abierto, si existe devuelve el registro, si no existe devuelve
+     * null
+     * @param licensePlate String Placa
+     * @return el registro si existe o null si no existe
+     */
     public VehicleParking findRegisterOpenByLicencePlate(String licensePlate);
+
+    public List<VehicleByParking> findVehicleByParkingId(Long id);
+
 
 }

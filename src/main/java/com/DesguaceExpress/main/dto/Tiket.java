@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class LogIn {
+public class Tiket {
 
     private String licencePlate;
 

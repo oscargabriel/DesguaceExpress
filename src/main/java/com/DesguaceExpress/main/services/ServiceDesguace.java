@@ -1,8 +1,11 @@
 package com.DesguaceExpress.main.services;
 
+import com.DesguaceExpress.main.dto.Tiket;
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
+import com.DesguaceExpress.main.dto.VehicleByParking;
 import com.DesguaceExpress.main.entities.Members;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +33,17 @@ public interface ServiceDesguace {
      */
     public HashMap<String,Long> RegistrarEntrada(String licensePlate, Long idParking);
 
+    /**
+     * Registra la salida de un vehiculo que este en el parqueadero por el que entro, si no encuentra la entrada
+     * en los registros o si el parqueadero ingresado es incorrecto genera un throw y el se encarga de enviar
+     * la informacion correspondiente
+     * @param licensePlate String
+     * @param idParking Long
+     * @return mensaje indicando la salida exitosa
+     */
+    public HashMap<String,String> RegistrarSalida(String licensePlate, Long idParking);
 
+    public List<VehicleByParking> findVehiclesByParking(@RequestBody String parking);
 
     public String crearSocio(Members members);
 }
