@@ -2,9 +2,11 @@ package com.DesguaceExpress.main.entities;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+//import lombok.Builder;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,7 +15,7 @@ import java.util.Date;
 public class Parking implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -26,7 +28,7 @@ public class Parking implements Serializable {
     private Float costHour;
 
     @Column(name = "create_on", nullable = true)
-    private Date createOn;
+    private LocalDateTime createOn;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "location_id",
@@ -41,7 +43,7 @@ public class Parking implements Serializable {
     public Parking() {
     }
 
-    private Parking(Long id, String name, Integer maxCapacity, Float costHour, Date createOn, Location locationId, Members membersId) {
+    private Parking(Long id, String name, Integer maxCapacity, Float costHour, LocalDateTime createOn, Location locationId, Members membersId) {
         this.id = id;
         this.name = name;
         this.maxCapacity = maxCapacity;
@@ -83,11 +85,11 @@ public class Parking implements Serializable {
         this.costHour = costHour;
     }
 
-    public Date getCreateOn() {
+    public LocalDateTime getCreateOn() {
         return createOn;
     }
 
-    public void setCreateOn(Date createOn) {
+    public void setCreateOn(LocalDateTime createOn) {
         this.createOn = createOn;
     }
 

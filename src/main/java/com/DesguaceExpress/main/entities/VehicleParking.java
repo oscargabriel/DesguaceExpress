@@ -1,12 +1,19 @@
 package com.DesguaceExpress.main.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;/*
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;*/
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -18,14 +25,15 @@ import java.util.Date;
 public class VehicleParking implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "entry", nullable = false)
-    private Date entry;
+    @CreationTimestamp
+    private LocalDateTime entry;
 
     @Column(name = "exit", nullable = true)
-    private Date exit;
+    private LocalDateTime exit;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "Vehicle_Id",
@@ -36,5 +44,10 @@ public class VehicleParking implements Serializable {
     @JoinColumn(name = "Parking_Id",
             foreignKey = @ForeignKey(name = "fk_parking_vehicleparking"))
     private Parking parkingId;
+
+    @PrePersist
+    private void prePersist(){
+        this.entry= LocalDateTime.now();
+    }
 
 }

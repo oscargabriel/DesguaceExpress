@@ -2,9 +2,11 @@ package com.DesguaceExpress.main.entities;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+//import lombok.Builder;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,7 +15,7 @@ import java.util.Date;
 public class Vehicle implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "license_plate", nullable = false)
@@ -32,7 +34,7 @@ public class Vehicle implements Serializable {
     private String year;
 
     @Column(name = "create_on", nullable = true)
-    private Date createOn;
+    private LocalDateTime createOn;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "members_id",
@@ -43,7 +45,7 @@ public class Vehicle implements Serializable {
     public Vehicle() {
     }
 
-    private Vehicle(Long id, String licensePlate, String type, String make, String model, String year, Date createOn, Members membersId) {
+    private Vehicle(Long id, String licensePlate, String type, String make, String model, String year, LocalDateTime createOn, Members membersId) {
         this.id = id;
         this.licensePlate = licensePlate;
         this.type = type;
@@ -102,11 +104,11 @@ public class Vehicle implements Serializable {
         this.year = year;
     }
 
-    public Date getCreateOn() {
+    public LocalDateTime getCreateOn() {
         return createOn;
     }
 
-    public void setCreateOn(Date createOn) {
+    public void setCreateOn(LocalDateTime createOn) {
         this.createOn = createOn;
     }
 

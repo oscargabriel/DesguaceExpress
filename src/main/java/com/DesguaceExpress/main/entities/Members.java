@@ -2,6 +2,7 @@ package com.DesguaceExpress.main.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+//import lombok.Builder;
 import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,16 +12,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Builder
-//@Data
-
 @Table(name = "members")
 public class Members implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "document", nullable = false)

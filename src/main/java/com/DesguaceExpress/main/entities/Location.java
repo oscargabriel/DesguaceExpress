@@ -1,7 +1,11 @@
 package com.DesguaceExpress.main.entities;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.*;/*
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;*/
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +23,7 @@ import java.io.Serializable;
 public class Location implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
 
