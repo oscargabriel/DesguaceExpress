@@ -58,8 +58,13 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
     @Override
     @GetMapping("VehicleByParking")
-    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(String parking) {
-        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByParking(parking));
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(String parkingName) {
+        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByParking(parkingName));
+    }
+
+    @Override
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(String memberDocument) {
+        return null;
     }
 
     @Override
@@ -67,6 +72,8 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     public ResponseEntity<String> CrearSocio(@RequestBody Members members) {
         return ResponseEntity.ok().body(serviceDesguace.crearSocio(members));
     }
+
+
 
 
 }

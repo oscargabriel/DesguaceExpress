@@ -12,6 +12,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Member;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,16 +116,16 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     }
 
     @Override
-    public Parking findParkingByName(String parking) {
+    public Parking findParkingByName(String parkingName) {
         TypedQuery<Parking> query = entityManager.createQuery(
                 "FROM Parking p " +
                         "WHERE p.name=:parking",Parking.class);
-        query.setParameter("parking",parking);
-        Parking parking1 = query.getSingleResult();
-        if(parking1==null){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero con nombre "+parking);
+        query.setParameter("parking",parkingName);
+        Parking parking = query.getSingleResult();
+        if(parking==null){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero con nombre "+parkingName);
         }
-        return parking1;
+        return parking;
     }
 
     @Override
@@ -180,5 +181,11 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                         .build())
                 );
         return vehicleByParkings;
+    }
+
+    @Override
+    public Member findMemberByName(String memberName) {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Members",Long.class);
+        return null;
     }
 }

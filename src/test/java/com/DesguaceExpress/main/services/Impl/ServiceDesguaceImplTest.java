@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,8 +35,9 @@ class ServiceDesguaceImplTest {
 
     }
 
+    //TODO: capturar la excepcion como salida valida
     @Test
-    void registrarEntradaSinExistir() {
+    void registrarEntradaCorrecta() {
         HashMap<String, Long> hashMap = serviceDesguace.RegistrarEntrada("B67C4A", 1L);
         assertTrue(hashMap.get("id")>0);
 

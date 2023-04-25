@@ -18,8 +18,11 @@ public class Parking implements Serializable {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @Column(name = "current_capacity", nullable = false)
+    private Integer currentCapacity;
 
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
@@ -43,9 +46,10 @@ public class Parking implements Serializable {
     public Parking() {
     }
 
-    private Parking(Long id, String name, Integer maxCapacity, Float costHour, LocalDateTime createOn, Location locationId, Members membersId) {
+    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, LocalDateTime createOn, Location locationId, Members membersId) {
         this.id = id;
         this.name = name;
+        this.currentCapacity = currentCapacity;
         this.maxCapacity = maxCapacity;
         this.costHour = costHour;
         this.createOn = createOn;
@@ -67,6 +71,14 @@ public class Parking implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getCurrentCapacity() {
+        return currentCapacity;
+    }
+
+    public void setCurrentCapacity(Integer currentCapacity) {
+        this.currentCapacity = currentCapacity;
     }
 
     public Integer getMaxCapacity() {
@@ -107,18 +119,5 @@ public class Parking implements Serializable {
 
     public void setMembersId(Members membersId) {
         this.membersId = membersId;
-    }
-
-    @Override
-    public String toString() {
-        return "Parking{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", maxCapacity=" + maxCapacity +
-                ", costHour=" + costHour +
-                ", createOn=" + createOn +
-                ", locationId=" + locationId +
-                ", membersId=" + membersId +
-                '}';
     }
 }

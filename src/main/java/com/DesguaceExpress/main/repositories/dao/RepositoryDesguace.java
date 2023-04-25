@@ -7,6 +7,7 @@ import com.DesguaceExpress.main.entities.Vehicle;
 import com.DesguaceExpress.main.entities.VehicleParking;
 import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,10 +52,10 @@ public interface RepositoryDesguace {
     /**
      * busca un parqueadero en la bd dado una id, si no la encuentra genera una excepcion y ExcepcionController
      * envia el mensaje de regreso
-     * @param parking String del nombre del parqueadero
+     * @param parkingName String del nombre del parqueadero
      * @return parqueadero
      */
-    public Parking findParkingByName(String parking);
+    public Parking findParkingByName(String parkingName);
 
     /**
      * apartir de una placa busca si existe registro abierto, si existe devuelve el registro, si no existe devuelve
@@ -64,7 +65,13 @@ public interface RepositoryDesguace {
      */
     public VehicleParking findRegisterOpenByLicencePlate(String licensePlate);
 
+    /**
+     * busca los vehiculos que esten asociados a un parking con el tiket abierto
+     * @param id Long del parqueadero
+     * @return lista VehicleByParking
+     */
     public List<VehicleByParking> findVehicleByParkingId(Long id);
 
+    public Member findMemberByName(String memberName);
 
 }

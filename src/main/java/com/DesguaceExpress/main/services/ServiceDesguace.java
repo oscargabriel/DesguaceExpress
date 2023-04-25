@@ -43,7 +43,14 @@ public interface ServiceDesguace {
      */
     public HashMap<String,String> RegistrarSalida(String licensePlate, Long idParking);
 
+    /**
+     * Dado un nombre de parqueadero busca todos los vehiculos que se encuentren con un tiket abierto
+     * @param parking String nombre del parqueadero
+     * @return lista de VehicleByParking
+     */
     public List<VehicleByParking> findVehiclesByParking(@RequestBody String parking);
+
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(@RequestBody String memberDocument);
 
     public String crearSocio(Members members);
 }

@@ -14,6 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Entity
@@ -35,6 +37,9 @@ public class VehicleParking implements Serializable {
     @Column(name = "exit", nullable = true)
     private LocalDateTime exit;
 
+    @Column(name = "cost", nullable = true)
+    private Float cost;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "Vehicle_Id",
             foreignKey = @ForeignKey(name = "fk_vehicle_vehicleparking"))
@@ -53,12 +58,9 @@ public class VehicleParking implements Serializable {
         this.entry= LocalDateTime.now();
     }
 
-    /**
-     * asigna la infomacion de salida automaticamente al actualizar el registro
-     */
     @PreUpdate
     private void preUpdate(){
-        this.exit=LocalDateTime.now();
+
     }
 
 }

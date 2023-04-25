@@ -10,6 +10,7 @@ import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
 import com.DesguaceExpress.main.repositories.dao.Impl.RepositoryPostgreImpl;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import com.DesguaceExpress.main.repositories.jpa.MembersRepository;
+import com.DesguaceExpress.main.repositories.jpa.ParkingRepository;
 import com.DesguaceExpress.main.repositories.jpa.VehicleParkingRepository;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Autowired
     VehicleParkingRepository vehicleParkingRepository;
 
+    @Autowired
+    ParkingRepository parkingRepository;
+
 
     public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace) {
         this.repositoryDesguace = repositoryDesguace;
@@ -44,24 +50,34 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, Long> RegistrarEntrada(String licensePlate, Long idParking) {
+
         VehicleParking vehicleParking = VehicleParking.builder()
                 .id(repositoryDesguace.VehicleParkingID())
                 .parkingId(repositoryDesguace.findParkingById(idParking))
                 .vehicleId(repositoryDesguace.findVehicleByLicensePlate(licensePlate))
                 .build();
-        //si no hay vehiculo asociado al parqueadero genera una excepcion y no registra la entrada
+        //si no hay socio vinculado al parqueadero genera una excepcion y no registra la entrada
         if(vehicleParking.getParkingId().getMembersId()==null){
             throw new NoMemberInTheParking(HttpStatus.NOT_ACCEPTABLE, vehicleParking.getParkingId().getName());
         }
-        //busca la placa, si encuentra un registro genera una excepcion
+        //busca la placa, si encuentra una que un tiket abierto genera una excepcion
         if(repositoryDesguace.findRegisterOpenByLicencePlate(licensePlate)!=null) {
             throw new VehicleRegistryIsBad(
                     HttpStatus.BAD_REQUEST,
                     "No se puede Registrar Ingreso, ya existe la placa en este u otro parqueadero"
             );
-
         }
+        //verifica que no se alcance la capacidad maxima en el parqueadero
+        if(vehicleParking.getParkingId().getMaxCapacity()<=vehicleParking.getParkingId().getCurrentCapacity()){
+            throw new VehicleRegistryIsBad(
+                    HttpStatus.BAD_REQUEST,
+                    "No se puede Registrar Ingreso, el parqueadero esta lleno"
+            );
+        }
+
         HashMap<String,Long> hashMap = new HashMap<>();
+        vehicleParking.getParkingId().setCurrentCapacity(vehicleParking.getParkingId().getCurrentCapacity()+1);
+        parkingRepository.save(vehicleParking.getParkingId());
         hashMap.put("id",vehicleParkingRepository.save(vehicleParking).getId());
         return hashMap;
     }
@@ -84,7 +100,18 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
                     "No estan permitidos los agujeros de gusano entre parqueaderos, salga por el parqueadero id: "+vehicleParking.getParkingId().getId()
             );
         }
-
+        vehicleParking.getParkingId().setCurrentCapacity(vehicleParking.getParkingId().getCurrentCapacity()-1);
+        vehicleParking.setExit(LocalDateTime.now());
+        vehicleParking.setCost(
+                ChronoUnit.HOURS.between(vehicleParking.getEntry(), vehicleParking.getExit())
+                        *vehicleParking.getParkingId().getCostHour()
+        );
+        System.out.println(vehicleParking.getEntry()+" entrada");
+        System.out.println(vehicleParking.getExit()+" salida");
+        System.out.println(vehicleParking.getParkingId().getCostHour()+" costo");
+        System.out.println(ChronoUnit.HOURS.between(vehicleParking.getEntry(), vehicleParking.getExit()));
+        System.out.println(vehicleParking.getCost()+" hola mundo");
+        parkingRepository.save(vehicleParking.getParkingId());
         vehicleParkingRepository.save(vehicleParking);
         HashMap<String,String> hashMap = new HashMap<>();
         hashMap.put("id","salida registrada");
@@ -92,9 +119,15 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     }
 
     @Override
-    public List<VehicleByParking> findVehiclesByParking(String parking) {
-        Parking parking1 = repositoryDesguace.findParkingByName(parking);
-        return repositoryDesguace.findVehicleByParkingId(parking1.getId());
+    public List<VehicleByParking> findVehiclesByParking(String parkingName) {
+        Parking parking = repositoryDesguace.findParkingByName(parkingName);
+        return repositoryDesguace.findVehicleByParkingId(parking.getId());
+    }
+
+    @Override
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(String memberDocument) {
+
+        return null;
     }
 
     @Override

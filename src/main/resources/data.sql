@@ -44,16 +44,16 @@ insert into location (id, country, departament, state, ubication) values (9, 'Un
 insert into location (id, country, departament, state, ubication) values (10, 'United States', 'Fresno', 'California', '5 Orin Point');
 
 
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (1, 'Lowe-Trantow', 20, 34.96, '17/04/2021', 1, 27);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (2, 'McClure-Reichert', 31, 34.9, '14/03/2021', 2, 3);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (3, 'Fay, Hessel and Nienow', 28, 38.82, '20/03/2021', 3, 9);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (4, 'Kris, Reichel and Dibbert', 24, 38.16, '27/09/2020', 4, 24);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (5, 'Rath and Sons', 28, 34.36, '14/03/2021', 5, 6);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (6, 'Littel and Sons', 23, 30.61, '04/07/2020', 6, 27);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (7, 'Walter Group', 46, 35.53, '20/03/2021', 7, 30);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (8, 'Osinski, Davis and Jerde', 38, 35.32, '15/09/2020', 8, 18);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (9, 'Simonis, Fisher and Marquardt', 27, 35.26, '02/04/2020', 9, 6);
-insert into parking (id, name, max_capacity, cost_hour, create_on, location_id, members_id) values (10, 'Kling-Streich', 43, 34.46, '18/09/2020', 10, 13);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (1, 'Lowe-Trantow', 0, 20, 34.96, '17/04/2021', 1, 27);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (2, 'McClure-Reichert', 0, 31, 34.9, '14/03/2021', 2, 3);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (3, 'Fay, Hessel and Nienow', 0, 28, 38.82, '20/03/2021', 3, 9);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (4, 'Kris, Reichel and Dibbert', 0, 24, 38.16, '27/09/2020', 4, 24);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (5, 'Rath and Sons', 0, 28, 34.36, '14/03/2021', 5, 6);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (6, 'Littel and Sons', 0, 23, 30.61, '04/07/2020', 6, 27);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (7, 'Walter Group', 0, 46, 35.53, '20/03/2021', 7, 30);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (8, 'Osinski, Davis and Jerde', 0, 38, 35.32, '15/09/2020', 8, 18);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (9, 'Simonis, Fisher and Marquardt', 0, 27, 35.26, '02/04/2020', 9, 6);
+insert into parking (id, name, current_capacity, max_capacity, cost_hour, create_on, location_id, members_id) values (10, 'Kling-Streich', 0, 43, 34.46, '18/09/2020', 10, 13);
 
 
 insert into vehicle (id, license_plate, type, make, model, year, create_on, members_id) values (1, '9F0440', 'car', 'Toyota', 'Camry', 1993, '15/05/2020', 30);

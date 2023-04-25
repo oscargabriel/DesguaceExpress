@@ -37,12 +37,13 @@ public interface ControllerDesguace {
     public ResponseEntity<HashMap<String,String>> RegistrarSalida(@RequestBody Tiket tiket);
 
     /**
-     * Dado el id del parking muestra todas las entradas registradas
-     * @param parking
-     * @return
+     * Dado el nombre del parqueadero muestra todos los vehiculos que estan parqueados actualmente
+     * @param parkingName String nombre del parqueadero
+     * @return lista de tipo VehicleByParking
      */
-    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(@RequestBody String parking);
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(@RequestBody String parkingName);
 
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(@RequestBody String memberDocument);
 
     public ResponseEntity<String> CrearSocio(@RequestBody Members members);
 
