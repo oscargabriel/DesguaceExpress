@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.exception;
 
 import com.DesguaceExpress.main.exception.custom.DataNotFound;
+import com.DesguaceExpress.main.exception.custom.EmailOutOfService;
 import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
 import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
 import org.springframework.http.HttpStatus;
@@ -13,12 +14,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * atrapa las excepciones personalizadas y estructura el mensaje que se envia de respuesta por http
+ */
+
 @ControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoMemberInTheParking.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public ResponseEntity<Map<String, Object>> NoMemberInTheParking(NoMemberInTheParking exception){
+    public ResponseEntity<Map<String, Object>> headleNoMemberInTheParking(NoMemberInTheParking exception){
         Map<String, Object> data = new HashMap<>();
         data.put("reason","No existe un socio registrado en el parqueadero "+exception.getReason());
 
@@ -27,7 +32,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataNotFound.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Map<String, Object>> DataNotFound(DataNotFound exception){
+    public ResponseEntity<Map<String, Object>> headDataNotFound(DataNotFound exception){
         Map<String, Object> data = new HashMap<>();
         data.put("reason",exception.getReason());
 
@@ -36,11 +41,20 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(VehicleRegistryIsBad.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> VehicleRegistryIsOpen(VehicleRegistryIsBad exception){
+    public ResponseEntity<Map<String, Object>> headVehicleRegistryIsOpen(VehicleRegistryIsBad exception){
         Map<String, Object> data = new HashMap<>();
         data.put("reason",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
+    }
+
+    @ExceptionHandler(EmailOutOfService.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, Object>> headEmailOutOfService(EmailOutOfService exception){
+        Map<String, Object> data = new HashMap<>();
+        data.put("reason",exception.getReason());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
     }
 
 }

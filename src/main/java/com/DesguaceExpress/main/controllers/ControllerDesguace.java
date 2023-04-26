@@ -57,6 +57,8 @@ public interface ControllerDesguace {
     public ResponseEntity<VehicleDetails> findVehicleDetailsById(@PathVariable Long id);
 
 
+    public ResponseEntity<HashMap<String, String>> callSendEmail(@RequestBody EmailBodyPre emailBodySend);
+
 
     public ResponseEntity<String> CrearSocio(@RequestBody Members members);
 

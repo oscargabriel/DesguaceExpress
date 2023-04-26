@@ -2,8 +2,6 @@ package com.DesguaceExpress.main.services;
 
 import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
@@ -63,6 +61,9 @@ public interface ServiceDesguace {
      * @return VehicleDetails
      */
     public VehicleDetails findVehicleDetailsById(Long id);
+
+
+    public HashMap<String, String> callSendEmail(EmailBodyPre emailBodyPre);
 
     public String crearSocio(Members members);
 }

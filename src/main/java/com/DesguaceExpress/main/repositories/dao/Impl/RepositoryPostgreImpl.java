@@ -1,9 +1,6 @@
 package com.DesguaceExpress.main.repositories.dao.Impl;
 
-import com.DesguaceExpress.main.dto.Top10VehicleInParking;
-import com.DesguaceExpress.main.dto.VehicleByParking;
-import com.DesguaceExpress.main.dto.VehicleDetails;
-import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
+import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
@@ -316,5 +313,43 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                 .build();
 
         return vehicleDetails;
+    }
+
+    @Override
+    public EmailBodySend VehicleInParkingByLicensePlate(EmailBodyPre emailBodyPre) {
+        Object[] objects=null;
+        EmailBodySend emailBodySend;
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.licensePlate, m.email, p.name, p.id " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id=vp.vehicleId " +
+                        "JOIN Parking p ON vp.parkingId=p.id " +
+                        "JOIN Members m ON m.id = v.membersId " +
+                        "WHERE v.licensePlate=:licensePlate AND vp.exit IS NULL ", Object[].class
+        );
+        query.setParameter("licensePlate",emailBodyPre.getPlaca());
+
+        try {
+            objects = query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo en un parqueadero");
+        }
+
+        if(emailBodyPre.getParqueaderoId()!=(Long) objects[3]){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"el vehiculo dentro del parqueadero");
+        }
+        if(!emailBodyPre.getEmail().equals((String) objects[1])){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"coincidencia con el email");
+        }
+
+        emailBodySend = EmailBodySend.builder()
+                .placa((String) objects[0])
+                .email((String) objects[1])
+                .parqueaderoNombre((String) objects[2])
+                .mensaje(emailBodyPre.getMensaje())
+                .build();
+
+
+        return emailBodySend;
     }
 }

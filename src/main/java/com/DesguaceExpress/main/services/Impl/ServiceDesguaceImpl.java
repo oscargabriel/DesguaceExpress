@@ -1,9 +1,6 @@
 package com.DesguaceExpress.main.services.Impl;
 
-import com.DesguaceExpress.main.dto.Top10VehicleInParking;
-import com.DesguaceExpress.main.dto.VehicleByParking;
-import com.DesguaceExpress.main.dto.VehicleDetails;
-import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
+import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.VehicleParking;
@@ -15,9 +12,9 @@ import com.DesguaceExpress.main.repositories.jpa.MembersRepository;
 import com.DesguaceExpress.main.repositories.jpa.ParkingRepository;
 import com.DesguaceExpress.main.repositories.jpa.VehicleParkingRepository;
 import com.DesguaceExpress.main.services.ServiceDesguace;
+import com.DesguaceExpress.main.services.ServiceSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +27,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     RepositoryDesguace repositoryDesguace;
 
+    ServiceSendEmail serviceSendEmail;
+
     @Autowired
     MembersRepository membersRepository;
 
@@ -40,8 +39,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     ParkingRepository parkingRepository;
 
 
-    public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace) {
+    public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace, ServiceSendEmailImpl serviceSendEmail) {
         this.repositoryDesguace = repositoryDesguace;
+        this.serviceSendEmail = serviceSendEmail;
     }
 
     @Override
@@ -139,6 +139,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     public VehicleDetails findVehicleDetailsById(Long id) {
         repositoryDesguace.findVehicleById(id);
         return repositoryDesguace.findVehicleDetailsById(id);
+    }
+
+    @Override
+    public HashMap<String, String> callSendEmail(EmailBodyPre emailBodyPre) {
+        EmailBodySend emailBodySend = repositoryDesguace.VehicleInParkingByLicensePlate(emailBodyPre);
+        return serviceSendEmail.SendEmail(emailBodySend);
     }
 
     @Override

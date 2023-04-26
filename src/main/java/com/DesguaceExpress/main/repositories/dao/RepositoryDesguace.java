@@ -1,9 +1,6 @@
 package com.DesguaceExpress.main.repositories.dao;
 
-import com.DesguaceExpress.main.dto.Top10VehicleInParking;
-import com.DesguaceExpress.main.dto.VehicleByParking;
-import com.DesguaceExpress.main.dto.VehicleDetails;
-import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
+import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
@@ -107,6 +104,9 @@ public interface RepositoryDesguace {
      * @return VehicleDetails
      */
     public VehicleDetails findVehicleDetailsById(Long id);
+
+
+    public EmailBodySend VehicleInParkingByLicensePlate(EmailBodyPre emailBodyPre);
 
 
 

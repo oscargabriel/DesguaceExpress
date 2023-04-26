@@ -1,9 +1,6 @@
 package com.DesguaceExpress.main.repositories.dao.Impl;
 
-import com.DesguaceExpress.main.dto.Top10VehicleInParking;
-import com.DesguaceExpress.main.dto.VehicleByParking;
-import com.DesguaceExpress.main.dto.VehicleDetails;
-import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
+import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
@@ -91,5 +88,17 @@ class RepositoryPostgreImplTest {
     void findVehicleDetailsById() {
         VehicleDetails vehicleDetails = repositoryPostgre.findVehicleDetailsById(40L);
         System.out.println(vehicleDetails.toString());
+    }
+
+    @Test
+    void vehicleInParkingByLicensePlate() {
+        EmailBodyPre emailBodyPre = EmailBodyPre.builder()
+                .email("wcameli3@yahoo.co.jp")
+                .placa("55CD72")
+                .parqueaderoId(10L)
+                .mensaje("hola mundo")
+                .build();
+        EmailBodySend emailBodySend = repositoryPostgre.VehicleInParkingByLicensePlate(emailBodyPre);
+        System.out.println(emailBodySend);
     }
 }

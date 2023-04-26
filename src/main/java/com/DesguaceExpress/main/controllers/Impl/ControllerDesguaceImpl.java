@@ -70,6 +70,12 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     }
 
     @Override
+    @PostMapping("service/sendEmail")
+    public ResponseEntity<HashMap<String, String>> callSendEmail(@RequestBody EmailBodyPre emailBodySend) {
+        return ResponseEntity.ok().body(serviceDesguace.callSendEmail(emailBodySend));
+    }
+
+    @Override
     @PostMapping("socios/register")
     public ResponseEntity<String> CrearSocio(@RequestBody Members members) {
         return ResponseEntity.ok().body(serviceDesguace.crearSocio(members));
