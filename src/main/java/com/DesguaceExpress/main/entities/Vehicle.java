@@ -1,7 +1,9 @@
 package com.DesguaceExpress.main.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
 //import lombok.Builder;
 
 
@@ -11,6 +13,7 @@ import java.util.Date;
 
 @Entity
 @Builder
+@AllArgsConstructor
 @Table(name = "vehicle")
 public class Vehicle implements Serializable {
 
@@ -33,6 +36,7 @@ public class Vehicle implements Serializable {
     @Column(name = "year", nullable = false)
     private Integer year;
 
+    @CreationTimestamp
     @Column(name = "create_on", nullable = true)
     private LocalDateTime createOn;
 
@@ -45,14 +49,13 @@ public class Vehicle implements Serializable {
     public Vehicle() {
     }
 
-    private Vehicle(Long id, String licensePlate, String type, String make, String model, Integer year, LocalDateTime createOn, Members membersId) {
+    private Vehicle(Long id, String licensePlate, String type, String make, String model, Integer year, Members membersId) {
         this.id = id;
         this.licensePlate = licensePlate;
         this.type = type;
         this.make = make;
         this.model = model;
         this.year = year;
-        this.createOn = createOn;
         this.membersId = membersId;
     }
 
@@ -106,10 +109,6 @@ public class Vehicle implements Serializable {
 
     public LocalDateTime getCreateOn() {
         return createOn;
-    }
-
-    public void setCreateOn(LocalDateTime createOn) {
-        this.createOn = createOn;
     }
 
     public Members getMembersId() {

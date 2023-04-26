@@ -2,10 +2,14 @@ package com.DesguaceExpress.main.repositories.dao;
 
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.dto.VehicleByParking;
+import com.DesguaceExpress.main.dto.VehicleDetails;
+import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
+import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
 import com.DesguaceExpress.main.entities.VehicleParking;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.lang.reflect.Member;
 import java.util.HashMap;
@@ -70,8 +74,40 @@ public interface RepositoryDesguace {
      * @param id Long del parqueadero
      * @return lista VehicleByParking
      */
-    public List<VehicleByParking> findVehicleByParkingId(Long id);
+    public List<VehicleByParking> findVehicleByParkingId(Long id, String name);
 
-    public Member findMemberByName(String memberName);
+    /**
+     * recibe de Services un Documento y busca se existe, si no encuentra genera un throw
+     * @param memberDocument String
+     * @return Members
+     */
+    public Members findMemberByDocument(String memberDocument);
+
+
+    /**
+     * recibe de Services un id y nombre de un socio busca los vehiculos que esten parqueados si no encuentra
+     * genera una excepcion
+     * @param id Long del usuario
+     * @param name String de nombre y apellido
+     * @return lista VehicleInParkingByMembers
+     */
+    public List<VehicleInParkingByMembers> VehicleInParkingByMembers(Long id, String name);
+
+    /**
+     * busca un vehiculo por su id, si existe lo regresa, si no exite genera un throw
+     * @param id Long del vehiculo
+     * @return Vehiculo
+     */
+    public Vehicle findVehicleById(Long id);
+
+    /**
+     * busca los detalles de un vehiculo que se encuentra en un parqueadero, si lo encuentra lo regresa, si no
+     * genera un throw
+     * @param id id del vehiculo
+     * @return VehicleDetails
+     */
+    public VehicleDetails findVehicleDetailsById(Long id);
+
+
 
 }

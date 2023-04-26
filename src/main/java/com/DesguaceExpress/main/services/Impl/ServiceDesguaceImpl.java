@@ -2,6 +2,8 @@ package com.DesguaceExpress.main.services.Impl;
 
 import com.DesguaceExpress.main.dto.Top10VehicleInParking;
 import com.DesguaceExpress.main.dto.VehicleByParking;
+import com.DesguaceExpress.main.dto.VehicleDetails;
+import com.DesguaceExpress.main.dto.VehicleInParkingByMembers;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.VehicleParking;
@@ -121,13 +123,22 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public List<VehicleByParking> findVehiclesByParking(String parkingName) {
         Parking parking = repositoryDesguace.findParkingByName(parkingName);
-        return repositoryDesguace.findVehicleByParkingId(parking.getId());
+        return repositoryDesguace.findVehicleByParkingId(parking.getId(), parking.getName());
     }
 
     @Override
-    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(String memberDocument) {
+    public List<VehicleInParkingByMembers> findVehiclesByMember(String memberDocument) {
+        //1 buscar socio por documento si no se encuentra devoler un throw
+        Members members = repositoryDesguace.findMemberByDocument(memberDocument);
+        //2 buscar vehiculos del socio que esten parqueados si no encuentra devolver un 200
 
-        return null;
+        return repositoryDesguace.VehicleInParkingByMembers(members.getId(),members.getFirstName()+" "+members.getLastName());
+    }
+
+    @Override
+    public VehicleDetails findVehicleDetailsById(Long id) {
+        repositoryDesguace.findVehicleById(id);
+        return repositoryDesguace.findVehicleDetailsById(id);
     }
 
     @Override

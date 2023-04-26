@@ -35,7 +35,6 @@ class ServiceDesguaceImplTest {
 
     }
 
-    //TODO: capturar la excepcion como salida valida
     @Test
     void registrarEntradaCorrecta() {
         HashMap<String, Long> hashMap = serviceDesguace.RegistrarEntrada("B67C4A", 1L);

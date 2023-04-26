@@ -1,10 +1,9 @@
 package com.DesguaceExpress.main.controllers;
 
-import com.DesguaceExpress.main.dto.Tiket;
-import com.DesguaceExpress.main.dto.Top10VehicleInParking;
-import com.DesguaceExpress.main.dto.VehicleByParking;
+import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
@@ -43,7 +42,21 @@ public interface ControllerDesguace {
      */
     public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(@RequestBody String parkingName);
 
-    public ResponseEntity<List<VehicleByParking>> findVehiclesByMember(@RequestBody String memberDocument);
+    /**
+     * dado un numero de documento busca muestra todos los vehiculos que estan en los parqueaderos
+     * @param memberDocument String del numero de documento del socio
+     * @return lista VehicleInParkingByMembers
+     */
+    public ResponseEntity<List<VehicleInParkingByMembers>> findVehiclesByMember(@RequestBody String memberDocument);
+
+    /**
+     * dado el id de un vehiculo por url llama a services y muestra los detalles de ese vehiculo
+     * @param id Long del vehiculo pK
+     * @return VehicleDetails
+     */
+    public ResponseEntity<VehicleDetails> findVehicleDetailsById(@PathVariable Long id);
+
+
 
     public ResponseEntity<String> CrearSocio(@RequestBody Members members);
 

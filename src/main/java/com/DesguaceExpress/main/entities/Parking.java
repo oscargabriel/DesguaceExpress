@@ -1,7 +1,9 @@
 package com.DesguaceExpress.main.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
 //import lombok.Builder;
 
 
@@ -11,6 +13,7 @@ import java.util.Date;
 
 @Entity
 @Builder
+@AllArgsConstructor
 @Table(name = "parking")
 public class Parking implements Serializable {
 
@@ -30,6 +33,7 @@ public class Parking implements Serializable {
     @Column(name = "cost_hour", nullable = false)
     private Float costHour;
 
+    @CreationTimestamp
     @Column(name = "create_on", nullable = true)
     private LocalDateTime createOn;
 
@@ -46,13 +50,12 @@ public class Parking implements Serializable {
     public Parking() {
     }
 
-    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, LocalDateTime createOn, Location locationId, Members membersId) {
+    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, Location locationId, Members membersId) {
         this.id = id;
         this.name = name;
         this.currentCapacity = currentCapacity;
         this.maxCapacity = maxCapacity;
         this.costHour = costHour;
-        this.createOn = createOn;
         this.locationId = locationId;
         this.membersId = membersId;
     }
@@ -99,10 +102,6 @@ public class Parking implements Serializable {
 
     public LocalDateTime getCreateOn() {
         return createOn;
-    }
-
-    public void setCreateOn(LocalDateTime createOn) {
-        this.createOn = createOn;
     }
 
     public Location getLocationId() {

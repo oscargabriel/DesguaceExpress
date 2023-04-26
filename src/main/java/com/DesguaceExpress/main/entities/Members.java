@@ -3,6 +3,7 @@ package com.DesguaceExpress.main.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 //import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Builder
+@AllArgsConstructor
 @Table(name = "members")
 public class Members implements Serializable {
 
@@ -42,14 +44,13 @@ public class Members implements Serializable {
     public Members() {
     }
 
-    private Members(Long id, String document, String firstName, String lastName, Long phone, String email, LocalDateTime createOn) {
+    private Members(Long id, String document, String firstName, String lastName, Long phone, String email) {
         this.id = id;
         this.document = document;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
-        this.createOn = createOn;
     }
 
     public Long getId() {
@@ -102,10 +103,6 @@ public class Members implements Serializable {
 
     public LocalDateTime getCreateOn() {
         return createOn;
-    }
-
-    public void setCreateOn(LocalDateTime createOn) {
-        this.createOn = createOn;
     }
 
 
