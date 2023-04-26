@@ -63,7 +63,17 @@ public interface ServiceDesguace {
     public VehicleDetails findVehicleDetailsById(Long id);
 
 
+    /**
+     * dado un emailBodyPre llama a repository para verificar la informacion, si es correcta llama a
+     * ServiceSendEmail y le da un emailBodySend para que envie el mensaje y retorna a controller el mensaje
+     * que llega
+     * @param emailBodyPre placa, email, mensaje, parqueaderoId
+     * @return mensaje HashMap< String, String>
+     */
     public HashMap<String, String> callSendEmail(EmailBodyPre emailBodyPre);
+
+
+    public List<Top10VehicleInParking> TopVehicleInParkingByParkingId(Long id);
 
     public String crearSocio(Members members);
 }

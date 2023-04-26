@@ -57,8 +57,15 @@ public interface ControllerDesguace {
     public ResponseEntity<VehicleDetails> findVehicleDetailsById(@PathVariable Long id);
 
 
+    /**
+     * recibe desde http la solicitud para enviar un mensaje, llama a services y devuelve el mensaje que viene
+     * desde services
+     * @param emailBodySend placa, email, mensaje, parqueaderoId
+     * @return mensaje HashMap< String, String>
+     */
     public ResponseEntity<HashMap<String, String>> callSendEmail(@RequestBody EmailBodyPre emailBodySend);
 
+    public ResponseEntity<List<Top10VehicleInParking>> TopVehicleInParkingByParkingId(@PathVariable Long id);
 
     public ResponseEntity<String> CrearSocio(@RequestBody Members members);
 

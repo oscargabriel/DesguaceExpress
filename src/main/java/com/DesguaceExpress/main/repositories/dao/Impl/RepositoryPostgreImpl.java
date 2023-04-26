@@ -8,13 +8,9 @@ import com.DesguaceExpress.main.entities.VehicleParking;
 import com.DesguaceExpress.main.exception.custom.DataNotFound;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import jakarta.persistence.*;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
-import java.lang.reflect.Member;
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,37 +26,33 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     @PersistenceContext//definir la variable para las consultas
     private EntityManager entityManager;
 
-
+    //----------------------------------
     @Override
     public Long LocationID() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Location",Long.class);
         return query.getSingleResult()+1L;
     }
-
     @Override
     public Long MembersID() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Members",Long.class);
         return query.getSingleResult()+1L;
     }
-
     @Override
     public Long ParkingID() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Parking",Long.class);
         return query.getSingleResult()+1L;
     }
-
     @Override
     public Long VehicleID() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Vehicle",Long.class);
         return query.getSingleResult()+1L;
     }
-
     @Override
     public Long VehicleParkingID() {
         TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM VehicleParking",Long.class);
         return query.getSingleResult()+1L;
     }
-
+    //----------------------------------
     @Override
     public List<Top10VehicleInParking> TopVehicleInParking() {
         List<Top10VehicleInParking> top10Vehicle = new ArrayList<Top10VehicleInParking>();
@@ -73,6 +65,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                         "ORDER BY count(v.id) desc " +
                         "limit 10 ", Object[].class
         );
+
         try {
             query.getResultList().forEach(x->
                     top10Vehicle.add(Top10VehicleInParking.builder()
@@ -89,7 +82,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         }catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"resultados para la busqueda");
         }
-        if(top10Vehicle.size()==0){
+        if(top10Vehicle.size()==0){//verifica que encontrara resultados
             throw new DataNotFound(HttpStatus.NOT_FOUND,"resultados para la busqueda");
         }
         return top10Vehicle;
@@ -127,11 +120,16 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
 
     @Override
     public Parking findParkingByName(String parkingName) {
+        Parking parking;
         TypedQuery<Parking> query = entityManager.createQuery(
                 "FROM Parking p " +
                         "WHERE p.name=:parking",Parking.class);
         query.setParameter("parking",parkingName);
-        Parking parking = query.getSingleResult();
+        try {
+            parking = query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero con nombre "+parkingName);
+        }
         if(parking==null){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero con nombre "+parkingName);
         }
@@ -194,7 +192,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         } catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+name);
         }
-        if(vehicleByParkings.size()>0){
+        if(vehicleByParkings.size()==0){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+name);
         }
         return vehicleByParkings;
@@ -272,7 +270,8 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         VehicleDetails vehicleDetails;
         HashMap<String ,String> infoParking = new HashMap<>();
         Boolean previus = false;
-
+        //busca si esta en en un parking, si no esta termina la ejecucion y retorna un throw
+        //si encuentra solo extrae el id del parqueadero en el que esta
         TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT p.id " +
                         "FROM Vehicle v " +
@@ -286,7 +285,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         }catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo en un parqueadero");
         }
-
+        //si lo encuentra busca todos los datos para llenar la clase que se va a mostrar
         TypedQuery<Object[]> query2 = entityManager.createQuery(
                 "SELECT v.id, v.licensePlate, vp.entry, p.name, CONCAT(l.country,', ',l.departament,', ', l.state,', ',l.ubication) " +
                         "FROM Vehicle v " +
@@ -301,7 +300,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
 
         infoParking.put("name",(String) objects.get(0)[3]);
         infoParking.put("location",(String) objects.get(0)[4]);
-
+        //si aparece mas de una vez guarda un true
         previus = objects.size() > 1;
 
         vehicleDetails = VehicleDetails.builder()
@@ -329,15 +328,16 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         );
         query.setParameter("licensePlate",emailBodyPre.getPlaca());
 
-        try {
+        try {//busca si esta el vehiculo en un parking
             objects = query.getSingleResult();
         }catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo en un parqueadero");
         }
-
+        //verifica que coincida con el id del parking
         if(emailBodyPre.getParqueaderoId()!=(Long) objects[3]){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"el vehiculo dentro del parqueadero");
         }
+        //verifica que el email coincida con el dueño del vehiculo
         if(!emailBodyPre.getEmail().equals((String) objects[1])){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"coincidencia con el email");
         }
@@ -349,7 +349,92 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                 .mensaje(emailBodyPre.getMensaje())
                 .build();
 
-
         return emailBodySend;
+    }
+
+    @Override
+    public List<Top10VehicleInParking> TopVehicleInParkingByParkingId(Long id) {
+        List<Top10VehicleInParking> top10Vehicle = new ArrayList<Top10VehicleInParking>();
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, count(v.id), v.licensePlate, v.type, v.make, v.model, CONCAT(m.firstName, ' ',m.lastName), m.document " +
+                        "FROM VehicleParking vp " +
+                        "JOIN Vehicle v ON v.id=vp.vehicleId " +
+                        "JOIN Members m ON m.id=v.membersId " +
+                        "JOIN Parking p ON vp.parkingId=p.id " +
+                        "WHERE vp.exit IS NOT NULL AND p.id=:id " +
+                        "GROUP BY v.id, v.licensePlate, v.type, v.make, v.model, CONCAT(m.firstName, ' ',m.lastName), m.document " +
+                        "ORDER BY count(v.id) desc, v.licensePlate " +
+                        "limit 10 ", Object[].class
+        );
+        query.setParameter("id",id);
+        try {
+            query.getResultList().forEach(x->
+                    top10Vehicle.add(Top10VehicleInParking.builder()
+                            .id((Long) x[0])
+                            .count((Long) x[1])
+                            .licensePlate((String) x[2])
+                            .type((String) x[3])
+                            .make((String) x[4])
+                            .model((String) x[5])
+                            .owner((String) x[6])
+                            .document((String) x[7])
+                            .build()
+                    ));
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"resultados para la busqueda");
+        }
+        if(top10Vehicle.size()==0){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"resultados para la busqueda");
+        }
+        return top10Vehicle;
+    }
+
+    @Override
+    public List<VehicleDetails> VehicleInParkingForTheFirstTime() {
+        List<VehicleDetails> vehicleDetails = new ArrayList<>();
+        //busca los vehiculos que esten en un parqueadero
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, v.licensePlate, vp.entry, p.name, CONCAT(l.country,', ',l.departament,', ', l.state,', ',l.ubication) " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id=vp.vehicleId " +
+                        "JOIN Parking p ON vp.parkingId=p.id " +
+                        "JOIN Location l ON l.id=p.locationId " +
+                        "WHERE vp.exit IS NULL ", Object[].class
+        );
+
+        List<Object[]> objects = query.getResultList();
+
+        if(objects.size()==0){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculos en los estacionamientos");
+        }
+        objects.forEach(x->{
+            HashMap<String ,String> infoParking = new HashMap<>();
+
+            infoParking.put("name",(String) x[3]);
+            infoParking.put("location",(String) x[4]);
+            VehicleDetails vehicle = VehicleDetails.builder()
+                    .id((Long) x[0])
+                    .licensePlate((String) x[1])
+                    .entry((LocalDateTime) x[2])
+                    .parking(infoParking)
+                    .build();
+            vehicleDetails.add(vehicle);
+        });
+        //busca cuantas veces aparece el vehiculo en algun parqueadero
+        for(int i=0;i<vehicleDetails.size();i++){
+            TypedQuery<Long> query2 = entityManager.createQuery(
+                    "SELECT COUNT(v.id) " +
+                            "FROM VehicleParking vp " +
+                            "JOIN Vehicle v ON v.id=vp.vehicleId " +
+                            "WHERE v.id=:id " +
+                            "GROUP BY v.id ",Long.class);
+            query2.setParameter("id",vehicleDetails.get(i).getId());
+            Long count = query2.getSingleResult();
+            vehicleDetails.get(i).setPrevious((count>1));
+
+        }
+
+        return vehicleDetails;
+
     }
 }

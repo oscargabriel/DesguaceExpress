@@ -82,7 +82,7 @@ class RepositoryPostgreImplTest {
     void findVehicleById() {
         Vehicle vehicle = repositoryPostgre.findVehicleById(10L);
         assertEquals("2A0CC8", vehicle.getLicensePlate());
-    }*/
+    }
 
     @Test
     void findVehicleDetailsById() {
@@ -101,4 +101,17 @@ class RepositoryPostgreImplTest {
         EmailBodySend emailBodySend = repositoryPostgre.VehicleInParkingByLicensePlate(emailBodyPre);
         System.out.println(emailBodySend);
     }
+
+    @Test
+    void topVehicleInParkingByParkingId() {
+        int size = repositoryPostgre.TopVehicleInParkingByParkingId(7L).size();
+        assertEquals(10,size);
+    }*/
+
+    @Test
+    void vehicleInParkingForTheFirstTime() {
+        List<VehicleDetails> vehicleDetails = repositoryPostgre.VehicleInParkingForTheFirstTime();
+        vehicleDetails.forEach(System.out::println);
+    }
+
 }

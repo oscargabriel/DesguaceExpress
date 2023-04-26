@@ -105,9 +105,19 @@ public interface RepositoryDesguace {
      */
     public VehicleDetails findVehicleDetailsById(Long id);
 
-
+    /**
+     * con una placa busca si existe un tiket abierto en un parqueadero y verifica que coincida la informacion
+     * de ser positiva debuelve un EmailBodySend, caso cotrario devuelve un throw indicando la discrepancia
+     * @param emailBodyPre busca que los datos conincidan
+     * @return EmailBodySend
+     */
     public EmailBodySend VehicleInParkingByLicensePlate(EmailBodyPre emailBodyPre);
 
+
+
+    public List<Top10VehicleInParking> TopVehicleInParkingByParkingId(Long id);
+
+    public List<VehicleDetails> VehicleInParkingForTheFirstTime();
 
 
 }

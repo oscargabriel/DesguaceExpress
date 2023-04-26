@@ -148,6 +148,11 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     }
 
     @Override
+    public List<Top10VehicleInParking> TopVehicleInParkingByParkingId(Long id) {
+        return repositoryDesguace.TopVehicleInParkingByParkingId(id);
+    }
+
+    @Override
     public String crearSocio(Members members) {
         members.setId(repositoryDesguace.MembersID());
         membersRepository.save(members);

@@ -1,9 +1,6 @@
 package com.DesguaceExpress.main.exception;
 
-import com.DesguaceExpress.main.exception.custom.DataNotFound;
-import com.DesguaceExpress.main.exception.custom.EmailOutOfService;
-import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
-import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
+import com.DesguaceExpress.main.exception.custom.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,6 +52,15 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         data.put("reason",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
+    }
+
+    @ExceptionHandler(InvalidExpressionException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    public ResponseEntity<Map<String, Object>> headInvalidExpressionException(InvalidExpressionException exception){
+        Map<String, Object> data = new HashMap<>();
+        data.put("reason",exception.getReason());
+
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(data);
     }
 
 }
