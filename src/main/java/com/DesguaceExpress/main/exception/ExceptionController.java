@@ -73,12 +73,4 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(data);
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Map<String, Object>> headPropertyValueException(DataIsInUse exception){
-        Map<String, Object> data = new HashMap<>();
-        data.put("reason","problemas de coneccion");
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
-    }
 }
