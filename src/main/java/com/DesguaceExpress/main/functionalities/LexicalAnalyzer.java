@@ -1,4 +1,4 @@
-package com.DesguaceExpress.main.Functionalities;
+package com.DesguaceExpress.main.functionalities;
 
 import com.DesguaceExpress.main.exception.custom.InvalidExpressionException;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.DesguaceExpress.main.controllers.Impl;
 
-import com.DesguaceExpress.main.Functionalities.LexicalAnalyzer;
+import com.DesguaceExpress.main.functionalities.LexicalAnalyzer;
 import com.DesguaceExpress.main.controllers.ControllerDesguace;
 import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;

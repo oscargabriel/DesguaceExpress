@@ -1,8 +1,6 @@
-package com.DesguaceExpress.main.Functionalities;
+package com.DesguaceExpress.main.functionalities;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class LexicalAnalyzerTest {
 

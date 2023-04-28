@@ -1,4 +1,4 @@
-package com.DesguaceExpress.main.Functionalities;
+package com.DesguaceExpress.main.functionalities;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
