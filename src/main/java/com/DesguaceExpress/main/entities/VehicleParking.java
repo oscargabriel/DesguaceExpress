@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.Audited;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Builder
+@Audited
 @Table(name = "vehicle_parking")
 public class VehicleParking implements Serializable {
 

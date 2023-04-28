@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +24,7 @@ class RepositoryPostgreImplTest {
     @Autowired
     RepositoryPostgreImpl repositoryPostgre;
 
-/*
+
     @Test
     void topVehicleInParking() {
         int size = repositoryPostgre.TopVehicleInParking().size();
@@ -61,7 +64,7 @@ class RepositoryPostgreImplTest {
 
     @Test
     void findVehicleByParkingId() {
-        List<VehicleByParking> vehicle = repositoryPostgre.findVehicleByParkingId(10L," hola mundo");
+        List<VehicleByParking> vehicle = repositoryPostgre.findVehicleByParkingId(10L);
         assertNotEquals(null,vehicle);
     }
 
@@ -104,14 +107,35 @@ class RepositoryPostgreImplTest {
 
     @Test
     void topVehicleInParkingByParkingId() {
-        int size = repositoryPostgre.TopVehicleInParkingByParkingId(7L).size();
+        int size = repositoryPostgre.TopVehicleInParkingByParkingId(10L).size();
         assertEquals(10,size);
-    }*/
+    }
 
     @Test
     void vehicleInParkingForTheFirstTime() {
         List<VehicleDetails> vehicleDetails = repositoryPostgre.VehicleInParkingForTheFirstTime();
         vehicleDetails.forEach(System.out::println);
+    }
+
+    @Test
+    void findEarningsByDate() {
+        LocalDateTime dateInit = LocalDateTime.of(2022,12,01,00,00);
+        LocalDateTime dateFin = LocalDateTime.of(2023,01,01,00,00);
+        Double cost = repositoryPostgre.FindEarningsByDate(10L,dateInit,dateFin);
+        System.out.println(cost);
+    }
+
+    @Test
+    void maximumIncomeForDay() {
+        MaximumIncome maximumIncome = repositoryPostgre.MaximumIncomeForDay(10L);
+        assertNotEquals(null,maximumIncome);
+    }
+
+    @Test
+    void top3ParkingThisYear() {
+        LocalDateTime dateInit = LocalDateTime.of(2022,01,01,00,00);
+        LocalDateTime dateFin = LocalDateTime.of(2023,01,01,00,00);
+        repositoryPostgre.Top3ParkingThisYear(dateInit,dateFin);
     }
 
 }

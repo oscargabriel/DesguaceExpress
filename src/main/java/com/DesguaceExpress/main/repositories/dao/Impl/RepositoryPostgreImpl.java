@@ -1,10 +1,7 @@
 package com.DesguaceExpress.main.repositories.dao.Impl;
 
 import com.DesguaceExpress.main.dto.*;
-import com.DesguaceExpress.main.entities.Members;
-import com.DesguaceExpress.main.entities.Parking;
-import com.DesguaceExpress.main.entities.Vehicle;
-import com.DesguaceExpress.main.entities.VehicleParking;
+import com.DesguaceExpress.main.entities.*;
 import com.DesguaceExpress.main.exception.custom.DataNotFound;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import jakarta.persistence.*;
@@ -164,7 +161,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     }
 
     @Override
-    public List<VehicleByParking> findVehicleByParkingId(Long id, String name) {
+    public List<VehicleByParking> findVehicleByParkingId(Long id) {
         List<VehicleByParking> vehicleByParkings = new ArrayList<>();
         TypedQuery<Object[]> query = entityManager.createQuery(
                 "SELECT v.id, v.licensePlate, v.type, v.make, v.model, v.year, CONCAT(m.firstName, ' ',m.lastName), m.document, vp.entry " +
@@ -190,10 +187,10 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                             .build())
             );
         } catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+name);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
         }
         if(vehicleByParkings.size()==0){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+name);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
         }
         return vehicleByParkings;
     }
@@ -209,6 +206,21 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
             member = query.getSingleResult();
         }catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"documento "+memberDocument+" no encontrado");
+        }
+        return member;
+    }
+
+    @Override
+    public Members findMemberById(Long id) {
+        TypedQuery<Members> query = entityManager.createQuery(
+                "FROM Members m " +
+                        "WHERE m.id=:id ",Members.class);
+        query.setParameter("id",id);
+        Members member = null;
+        try {
+            member = query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"socio con id "+id);
         }
         return member;
     }
@@ -436,5 +448,236 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
 
         return vehicleDetails;
 
+    }
+
+    @Override
+    public Double FindEarningsByDate(Long parkingId, LocalDateTime dateInit, LocalDateTime dateEnd) {
+        Double cost=0D;
+        TypedQuery<Double> query = entityManager.createQuery(
+                "SELECT SUM(vp.cost) " +
+                        "FROM Parking p " +
+                        "JOIN VehicleParking vp ON p.id=vp.parkingId " +
+                        "WHERE p.id=:parkingId AND vp.exit BETWEEN :dateInit AND :dateEnd ",Double.class);
+        query.setParameter("parkingId",parkingId);
+        query.setParameter("dateInit",dateInit);
+        query.setParameter("dateEnd",dateEnd);
+        cost=query.getSingleResult();
+        return (cost!=null)?cost:0D;
+    }
+
+    @Override
+    public MaximumIncome MaximumIncomeForDay(Long id) {
+        MaximumIncome maximumIncome;
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "select sum(vp.cost), to_char(vp.exit,'dd-mm-yyyy') " +
+                        "from Parking p " +
+                        "join VehicleParking vp on p.id=vp.parkingId " +
+                        "where p.id=:id and vp.exit is not null " +
+                        "group by to_char(vp.exit,'dd-mm-yyyy') " +
+                        "order by sum(vp.cost) desc " +
+                        "limit 1 ",Object[].class
+        );
+        query.setParameter("id",id);
+        Object[] objects;
+        try {//busca si encuentra ganancias registradas en el parqueadero o evade el fisco
+            objects = query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"ganancias registradas en el parqueadero");
+        }
+        maximumIncome = MaximumIncome.builder()
+                .income((Double) objects[0])
+                .day((String) objects[1])
+                .build();
+        return maximumIncome;
+    }
+
+    @Override
+    public List<Top3Parking> Top3ParkingThisYear(LocalDateTime dateInit, LocalDateTime dateEnd) {
+        List<Top3Parking> top3Parkings = new ArrayList<>();
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "select sum(vp.cost), p.name " +
+                        "from Parking p " +
+                        "join VehicleParking vp on p.id=vp.parkingId " +
+                        "where vp.exit is not null and vp.exit between :dateInit and :dateEnd " +
+                        "group by p.name " +
+                        "order by sum(vp.cost) desc " +
+                        "limit 3 ",Object[].class);
+        query.setParameter("dateInit",dateInit);
+        query.setParameter("dateEnd",dateEnd);
+
+        query.getResultList().forEach(x->
+                top3Parkings.add(Top3Parking.builder()
+                                .income((Double) x[0])
+                                .parkingName((String) x[1])
+                        .build()));
+        return top3Parkings;
+    }
+
+//-----------------------------------------------------------------------------------------------
+    @Override
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id) {
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, v.licensePlate, v.type, v.make, v.model, v.year, CONCAT(m.firstName, ' ',m.lastName), m.document, vp.entry " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id = vp.vehicleId " +
+                        "JOIN Parking p ON p.id=vp.parkingId " +
+                        "JOIN Members m ON m.id=v.membersId " +
+                        "WHERE p.id =:id " +
+                        "ORDER BY vp.entry DESC ",Object[].class
+        );
+        query.setParameter("id",id);
+
+        return QueryDataPartial(query,id);
+    }
+
+    @Override
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id, String licensePlate) {
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, v.licensePlate, v.type, v.make, v.model, v.year, CONCAT(m.firstName, ' ',m.lastName), m.document, vp.entry " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id = vp.vehicleId " +
+                        "JOIN Parking p ON p.id=vp.parkingId " +
+                        "JOIN Members m ON m.id=v.membersId " +
+                        "WHERE p.id =:id AND position(:licensePlate in v.licensePlate)>0 " +
+                        "ORDER BY vp.entry DESC ",Object[].class
+        );
+        query.setParameter("id",id);
+        query.setParameter("licensePlate",licensePlate);
+        return QueryDataPartial(query,id);
+    }
+
+    @Override
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id, LocalDateTime dateInit, LocalDateTime dateEnd) {
+        List<VehicleByParking> vehicleByParkings = new ArrayList<>();
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, v.licensePlate, v.type, v.make, v.model, v.year, CONCAT(m.firstName, ' ',m.lastName), m.document, vp.entry " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id = vp.vehicleId " +
+                        "JOIN Parking p ON p.id=vp.parkingId " +
+                        "JOIN Members m ON m.id=v.membersId " +
+                        "WHERE p.id =:id AND vp.entry BETWEEN :dateInit AND :dateEnd " +
+                        "ORDER BY vp.entry DESC ",Object[].class
+        );
+        query.setParameter("id",id);
+        query.setParameter("dateInit",dateInit);
+        query.setParameter("dateEnd",dateEnd);
+        return QueryDataPartial(query,id);
+    }
+
+    @Override
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id, String licensePlate, LocalDateTime dateInit, LocalDateTime dateEnd) {
+        TypedQuery<Object[]> query = entityManager.createQuery(
+                "SELECT v.id, v.licensePlate, v.type, v.make, v.model, v.year, CONCAT(m.firstName, ' ',m.lastName), m.document, vp.entry " +
+                        "FROM Vehicle v " +
+                        "JOIN VehicleParking vp ON v.id = vp.vehicleId " +
+                        "JOIN Parking p ON p.id=vp.parkingId " +
+                        "JOIN Members m ON m.id=v.membersId " +
+                        "WHERE p.id =:id AND position(:licensePlate in v.licensePlate)>0 AND vp.entry BETWEEN :dateInit AND :dateEnd " +
+                        "ORDER BY vp.entry DESC ",Object[].class
+        );
+        query.setParameter("id",id);
+        query.setParameter("licensePlate",licensePlate);
+        query.setParameter("dateInit",dateInit);
+        query.setParameter("dateEnd",dateEnd);
+        return QueryDataPartial(query,id);
+    }
+
+    @Override
+    public List<VehicleByParking> QueryDataPartial(TypedQuery<Object[]> query, Long id) {
+        List<VehicleByParking> vehicleByParkings = new ArrayList<>();
+        try {
+            query.getResultList().forEach(x ->
+                    vehicleByParkings.add(VehicleByParking.builder()
+                            .id((Long) x[0])
+                            .licensePlate((String) x[1])
+                            .type((String) x[2])
+                            .make((String) x[3])
+                            .model((String) x[4])
+                            .year((Integer) x[5])
+                            .owner((String) x[6])
+                            .document((String) x[7])
+                            .entry((LocalDateTime) x[8])
+                            .build())
+            );
+        } catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
+        }
+        if(vehicleByParkings.size()==0){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
+        }
+        return vehicleByParkings;
+    }
+
+    @Override
+    public Boolean FindMemberInParking(Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT p.membersId " +
+                        "From Parking p " +
+                        "WHERE p.id=:id ",Long.class
+        );
+        query.setParameter("id",id);
+        try {//si esta ocupado retorna true, caso contrario retorna false
+            return query.getSingleResult() != null;
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
+        }
+    }
+
+    @Override
+    public List<Long> FindVehicleIdByMemberId(Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT v.id " +
+                        "From Members m " +
+                        "JOIN Vehicle v ON m.id=v.memebersId " +
+                        "WHERE m.id=:id ",Long.class
+        );
+        query.setParameter("id",id);
+        try {
+            return query.getResultList();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
+        }
+    }
+
+    @Override
+    public Vehicle FindVehicleById(Long id) {
+        TypedQuery<Vehicle> query = entityManager.createQuery(
+                        "From Vehicle v " +
+                        "WHERE v.id=:id ",Vehicle.class
+        );
+        query.setParameter("id",id);
+        try {
+            return query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo id "+id);
+        }
+    }
+
+    @Override
+    public Location FindLocationById(Long id) {
+        TypedQuery<Location> query = entityManager.createQuery(
+                "From Location l " +
+                        "WHERE l.id=:id ",Location.class
+        );
+        query.setParameter("id",id);
+        try {
+            return query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo id "+id);
+        }
+    }
+
+    @Override
+    public Parking FindParkingById(Long id) {
+        TypedQuery<Parking> query = entityManager.createQuery(
+                "From Parking p " +
+                        "WHERE p.id=:id ",Parking.class
+        );
+        query.setParameter("id",id);
+        try {
+            return query.getSingleResult();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
+        }
     }
 }

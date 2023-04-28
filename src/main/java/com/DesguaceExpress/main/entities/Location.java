@@ -1,15 +1,12 @@
 package com.DesguaceExpress.main.entities;
 
 
-import jakarta.persistence.*;/*
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;*/
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 
 import java.io.Serializable;
@@ -19,6 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Builder
+@Audited
 @Table(name = "location")
 public class Location implements Serializable {
 

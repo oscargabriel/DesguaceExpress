@@ -3,21 +3,24 @@ package com.DesguaceExpress.main.services.Impl;
 import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
+import com.DesguaceExpress.main.entities.Vehicle;
 import com.DesguaceExpress.main.entities.VehicleParking;
+import com.DesguaceExpress.main.exception.custom.DataNotFound;
 import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
 import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
 import com.DesguaceExpress.main.repositories.dao.Impl.RepositoryPostgreImpl;
 import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
-import com.DesguaceExpress.main.repositories.jpa.MembersRepository;
-import com.DesguaceExpress.main.repositories.jpa.ParkingRepository;
-import com.DesguaceExpress.main.repositories.jpa.VehicleParkingRepository;
+import com.DesguaceExpress.main.repositories.jpa.*;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import com.DesguaceExpress.main.services.ServiceSendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -38,8 +41,15 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Autowired
     ParkingRepository parkingRepository;
 
+    @Autowired
+    VehicleRepository vehicleRepository;
 
-    public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace, ServiceSendEmailImpl serviceSendEmail) {
+    @Autowired
+    LocationRepository locationRepository;
+
+
+    public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace,
+                               ServiceSendEmailImpl serviceSendEmail) {
         this.repositoryDesguace = repositoryDesguace;
         this.serviceSendEmail = serviceSendEmail;
     }
@@ -108,11 +118,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
                 ChronoUnit.HOURS.between(vehicleParking.getEntry(), vehicleParking.getExit())
                         *vehicleParking.getParkingId().getCostHour()
         );
-        System.out.println(vehicleParking.getEntry()+" entrada");
-        System.out.println(vehicleParking.getExit()+" salida");
-        System.out.println(vehicleParking.getParkingId().getCostHour()+" costo");
-        System.out.println(ChronoUnit.HOURS.between(vehicleParking.getEntry(), vehicleParking.getExit()));
-        System.out.println(vehicleParking.getCost()+" hola mundo");
         parkingRepository.save(vehicleParking.getParkingId());
         vehicleParkingRepository.save(vehicleParking);
         HashMap<String,String> hashMap = new HashMap<>();
@@ -123,7 +128,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public List<VehicleByParking> findVehiclesByParking(String parkingName) {
         Parking parking = repositoryDesguace.findParkingByName(parkingName);
-        return repositoryDesguace.findVehicleByParkingId(parking.getId(), parking.getName());
+        return repositoryDesguace.findVehicleByParkingId(parking.getId());
     }
 
     @Override
@@ -153,9 +158,190 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     }
 
     @Override
-    public String crearSocio(Members members) {
+    public List<VehicleDetails> VehicleInParkingForTheFirstTime() {
+        return repositoryDesguace.VehicleInParkingForTheFirstTime();
+    }
+
+    @Override
+    public PeriodicEarnings findPeriodicEarningsByParkingId(Long id) {
+        LocalDateTime hoy = LocalDateTime.now();
+        PeriodicEarnings periodicEarnings = PeriodicEarnings.builder()
+                .day(repositoryDesguace.FindEarningsByDate(id,hoy.minusDays(1L),hoy))
+                .week(repositoryDesguace.FindEarningsByDate(id,hoy.minusWeeks(1L),hoy))
+                .month(repositoryDesguace.FindEarningsByDate(id,hoy.minusMonths(1L),hoy))
+                .year(repositoryDesguace.FindEarningsByDate(id,hoy.minusYears(1L),hoy))
+                .build();
+        return periodicEarnings;
+    }
+
+    @Override
+    public MaximumIncome MaximumIncomeForDay(Long id) {
+        return repositoryDesguace.MaximumIncomeForDay(id);
+    }
+
+    @Override
+    public List<Top3Parking> Top3ParkingThisYear() {
+        LocalDateTime dateInit = LocalDateTime.now();
+        LocalDateTime dateFin = dateInit.minusYears(1L);
+        return repositoryDesguace.Top3ParkingThisYear(dateInit,dateFin);
+    }
+
+    @Override
+    public List<VehicleByParking> VehiclesInAParkingByPartialData(PartialData partialData) {
+        if(partialData.getParkingId()==null){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"id del parqueadero para la busqueda");
+        }
+        int indicador=0;
+        indicador+=(partialData.getPartialLicensePlate()==null)?0:1;
+        indicador+=(partialData.getDateInit()==null)?0:10;
+        indicador+=(partialData.getDateEnd()==null)?0:100;
+        System.out.println(indicador);
+        if(indicador==000){//no proporciono ningun dato
+            return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
+                    partialData.getParkingId()
+            );
+        }
+        if(indicador==001){//solo proporciono la placa
+            return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
+                    partialData.getParkingId(),
+                    partialData.getPartialLicensePlate()
+            );
+        }
+        //formateador de fecha para que sea valida al momento de la ejecucion de la busqueda
+        DateTimeFormatter formateador = new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .append(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")).toFormatter();
+        if(indicador==110){//solo proporciono las fechas
+            return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
+                    partialData.getParkingId(),
+                    LocalDateTime.parse(partialData.getDateInit()+" 00:00:00", formateador),
+                    LocalDateTime.parse(partialData.getDateEnd()+" 00:00:00", formateador)
+            );
+        }
+
+        if(indicador==111){//proporciono todos los datos
+            return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
+                    partialData.getParkingId(),
+                    partialData.getPartialLicensePlate(),
+                    LocalDateTime.parse(partialData.getDateInit()+" 00:00:00", formateador),
+                    LocalDateTime.parse(partialData.getDateEnd()+" 00:00:00", formateador)
+            );
+        }
+        throw new DataNotFound(HttpStatus.NOT_FOUND,"resultados, tiene que proporcionar ambas o ninguna fecha");
+    }
+
+    @Override
+    public HashMap<String, String> LinMemberToParking(MemberToParking membertoparking) {
+        if(repositoryDesguace.FindMemberInParking(membertoparking.getParkingId())){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"plaza disponible para el parqueadero");
+        }
+        //busca socio correspondiente al id
+        Members members = repositoryDesguace.findMemberById(membertoparking.getMembersId());
+        //busca parking correspondiente al id
+        Parking parking = repositoryDesguace.findParkingById(membertoparking.getParkingId());
+        //guarda el socio en el parquin para guardarlo en la db
+        parking.setMembersId(members);
+        //guarda el parking actualizado con el nuevo socio
+        parkingRepository.save(parking);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","el socio "+members.getFirstName()+" "+members.getFirstName()+" "+
+                " fue asignado al parqueadero "+parking.getName());
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> RegisterMember(Members members) {
         members.setId(repositoryDesguace.MembersID());
+        //TODO:verificar unic key
         membersRepository.save(members);
-        return "creacion exitosa";
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","socio creado");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> UpdateMember(Members members) {
+        repositoryDesguace.findMemberById(members.getId());
+        //TODO:verificar unic key
+        membersRepository.save(members);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se actualizo el socio ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> DeleteMember(Long id) {
+        //busca al socio
+        Members members = repositoryDesguace.findMemberById(id);
+        //busca los autos que le pertenece y los borra
+        repositoryDesguace.FindVehicleIdByMemberId(id).forEach(x->
+        {
+            vehicleRepository.deleteById(x);
+        });
+        //elimina al socio
+        membersRepository.delete(members);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se elimino el socio ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> RegisterVehicle(Vehicle vehicle) {
+        vehicle.setId(repositoryDesguace.VehicleID());
+        //TODO:verificar unic key
+        Members members = repositoryDesguace.findMemberById(vehicle.getMembersId().getId());
+        vehicle.setMembersId(members);
+        vehicleRepository.save(vehicle);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se creo el vehiculo ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> DeleteVehicle(Long id) {
+        repositoryDesguace.FindVehicleById(id);
+        vehicleRepository.deleteById(id);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se elimino el vehiculo ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> RegisterParking(Parking parking) {
+        parking.setId(repositoryDesguace.ParkingID());
+        //TODO:verificar unic key
+        parking.setLocationId(locationRepository.save(parking.getLocationId()));
+        parkingRepository.save(parking);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se creo el nuevo parqueadero ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> UpdateParking(Parking parking) {
+        parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
+        //TODO:verificar unic key
+        parkingRepository.save(parking);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se actualizo el parqueadero ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> DeleteParking(Long id) {
+        repositoryDesguace.FindParkingById(id);
+        parkingRepository.deleteById(id);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se elimino el parqueadero ");
+        return hashMap;
     }
 }

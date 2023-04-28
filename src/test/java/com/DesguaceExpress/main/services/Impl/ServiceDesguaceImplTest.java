@@ -1,5 +1,7 @@
 package com.DesguaceExpress.main.services.Impl;
 
+import com.DesguaceExpress.main.dto.PartialData;
+import com.DesguaceExpress.main.dto.VehicleByParking;
 import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
 import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
 import org.hibernate.envers.Audited;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,5 +64,17 @@ class ServiceDesguaceImplTest {
         assertThrows(VehicleRegistryIsBad.class,()->{
             serviceDesguace.RegistrarSalida("44CC79",10L);
         });
+    }
+
+    @Test
+    void vehiclesInAParkingByPartialData() {
+        PartialData partialData = PartialData.builder()
+                .parkingId(10L)
+                .dateEnd("01-01-2023")
+                .dateInit("01-01-2000")
+                .partialLicensePlate("5")
+                .build();
+        List<VehicleByParking> vehicleByParkings = serviceDesguace.VehiclesInAParkingByPartialData(partialData);
+        assertNotEquals(null,vehicleByParkings);
     }
 }

@@ -1,15 +1,10 @@
 package com.DesguaceExpress.main.repositories.dao;
 
 import com.DesguaceExpress.main.dto.*;
-import com.DesguaceExpress.main.entities.Members;
-import com.DesguaceExpress.main.entities.Parking;
-import com.DesguaceExpress.main.entities.Vehicle;
-import com.DesguaceExpress.main.entities.VehicleParking;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import com.DesguaceExpress.main.entities.*;
+import jakarta.persistence.TypedQuery;
 
-import java.lang.reflect.Member;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -71,7 +66,7 @@ public interface RepositoryDesguace {
      * @param id Long del parqueadero
      * @return lista VehicleByParking
      */
-    public List<VehicleByParking> findVehicleByParkingId(Long id, String name);
+    public List<VehicleByParking> findVehicleByParkingId(Long id);
 
     /**
      * recibe de Services un Documento y busca se existe, si no encuentra genera un throw
@@ -80,7 +75,12 @@ public interface RepositoryDesguace {
      */
     public Members findMemberByDocument(String memberDocument);
 
-
+    /**
+     * recibe de Services un id y busca se existe, si no encuentra genera un throw
+     * @param id Long
+     * @return Members
+     */
+    public Members findMemberById(Long id);
     /**
      * recibe de Services un id y nombre de un socio busca los vehiculos que esten parqueados si no encuentra
      * genera una excepcion
@@ -113,11 +113,107 @@ public interface RepositoryDesguace {
      */
     public EmailBodySend VehicleInParkingByLicensePlate(EmailBodyPre emailBodyPre);
 
-
-
+    /**
+     * busca los 10 vehiculos que mas veces se han parqueado en un parqueadero dado su id
+     * @param id Long parqueadero
+     * @return List Top10VehicleInParking
+     */
     public List<Top10VehicleInParking> TopVehicleInParkingByParkingId(Long id);
 
+    /**
+     * busca todos los vehiculos que se encuentren en los parqueaderos y dice si es la primera vez
+     * o si ya han estando en parqueaderos previamente
+     * @return Lista VehicleDetails
+     */
     public List<VehicleDetails> VehicleInParkingForTheFirstTime();
 
+    /**
+     * dado un periodo con dos fechas y el id del parqueadero busca los ingresos que genero el parqueadero en
+     * ese tiempo
+     * @param parkingId Long del parqueadero
+     * @param dateInit LocalDateTime desde donde se va a buscar
+     * @param dateEnd LocalDateTime hasta que fecha se va a buscar
+     * @return Double la suma de los ingresos ese dia
+     */
+    public Double FindEarningsByDate(Long parkingId, LocalDateTime dateInit, LocalDateTime dateEnd);
+
+    /**
+     * dado el id de un parqueadero busca el dia que genero mayor ganancia
+     * @param id Long parqueadero
+     * @return MaximumIncome ganancia y el dia
+     */
+    public MaximumIncome MaximumIncomeForDay(Long id);
+
+    /**
+     * busca los 3 parqueaderon que mas ingresos han tenido este año
+     * @param dateInit fecha inicial
+     * @param dateEnd fecha actual
+     * @return Top3Parking
+     */
+    public List<Top3Parking> Top3ParkingThisYear(LocalDateTime dateInit, LocalDateTime dateEnd);
+
+    /**
+     * funcion sobrecargada, recibe un id de parqueadero y buscar los vehiculos que hay en el, los ordena por
+     * fecha de ingreso
+     * @param id ParkingId
+     * @return lista de VehicleByParking
+     */
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id);
+
+    /**
+     * funcion sobrecargada, recibe un id de parqueadero y una placa parcial o total
+     * y buscar los vehiculos que hay en el, los ordena por fecha de ingreso
+     * @param id ParkingId
+     * @param licensePlate String placa parcial o total
+     * @return lista de VehicleByParking
+     */
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id,String licensePlate);
+
+    /**
+     * funcion sobrecargada, recibe un id de parqueadero y una fecha inicial y final
+     * y buscar los vehiculos que hay en el, los ordena por fecha de ingreso
+     * @param id Long ParkingId
+     * @param dateInit LocalDateTime
+     * @param dateEnd LocalDateTime
+     * @return lista de VehicleByParking
+     */
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id,LocalDateTime dateInit, LocalDateTime dateEnd);
+
+    /**
+     * funcion sobrecargada, recibe un id de parqueadero, una placa parcial o total  y una fecha inicial y final
+     * y buscar los vehiculos que hay en el, los ordena por fecha de ingreso
+     * @param id Long ParkingId
+     * @param licensePlate String placa parcial o total
+     * @param dateInit LocalDateTime
+     * @param dateEnd LocalDateTime
+     * @return
+     */
+    public List<VehicleByParking> findVehicleByParkingIdAndDataPartial(Long id,String licensePlate, LocalDateTime dateInit, LocalDateTime dateEnd);
+
+    /**
+     * funcion para uso de la funcion sobrecargada, recibe una query y procesa los datos para retornar
+     * una lista de vehiculos, si la lista esta vacia genera un throw para indicar que no se encuntraron
+     * resultados
+     * @param query Object[]
+     * @param id Long ParqueaderoId
+     * @return lista VehicleByParking
+     */
+    public List<VehicleByParking> QueryDataPartial(TypedQuery<Object[]> query, Long id);
+
+    /**
+     * busca si un parqueadero tiene socios viculados
+     * @param id Long ParkingId
+     * @return Boolean true si hay y false si no hay
+     */
+    public Boolean FindMemberInParking(Long id);
+
+
+    public List<Long> FindVehicleIdByMemberId(Long id);
+
+    public Vehicle FindVehicleById(Long id);
+
+    public Location FindLocationById(Long id);
+
+    public Parking FindParkingById(Long id);
 
 }

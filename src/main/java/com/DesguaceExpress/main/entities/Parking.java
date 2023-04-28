@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.Audited;
 //import lombok.Builder;
 
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @Entity
 @Builder
 @AllArgsConstructor
+@Audited
 @Table(name = "parking")
 public class Parking implements Serializable {
 

@@ -3,7 +3,9 @@ package com.DesguaceExpress.main.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.Audited;
 //import lombok.Builder;
 
 
@@ -14,6 +16,7 @@ import java.util.Date;
 @Entity
 @Builder
 @AllArgsConstructor
+@Audited
 @Table(name = "vehicle")
 public class Vehicle implements Serializable {
 
