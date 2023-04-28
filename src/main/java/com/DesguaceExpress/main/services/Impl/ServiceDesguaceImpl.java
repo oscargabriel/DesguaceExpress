@@ -1,5 +1,6 @@
 package com.DesguaceExpress.main.services.Impl;
 
+import com.DesguaceExpress.main.controllers.Impl.ControllerDesguaceImpl;
 import com.DesguaceExpress.main.dto.*;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
@@ -13,6 +14,8 @@ import com.DesguaceExpress.main.repositories.dao.RepositoryDesguace;
 import com.DesguaceExpress.main.repositories.jpa.*;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import com.DesguaceExpress.main.services.ServiceSendEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +49,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Autowired
     LocationRepository locationRepository;
+
+    Logger logger = LoggerFactory.getLogger(ServiceDesguaceImpl.class);
 
 
     public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace,

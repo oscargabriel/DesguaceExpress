@@ -10,7 +10,6 @@ import com.DesguaceExpress.main.services.Impl.ServiceDesguaceImpl;
 import com.DesguaceExpress.main.services.ServiceDesguace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +35,109 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
 
     @Override
-    @GetMapping("top10Vehicle")
+    @GetMapping("api/top10Vehiculos")
     public ResponseEntity<List<Top10VehicleInParking>> TopVehicleInParking() {
         return ResponseEntity.ok().body(serviceDesguace.TopVehicleInParking());
+    }
+
+    @Override
+    @GetMapping("api/VehiculosEnParqueadero/{parkingName}")
+    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(@PathVariable String parkingName) {
+        lexicalAnalyzer.validateRegularExpression(parkingName,"parkingName");
+        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByParking(parkingName));
+    }
+
+    @Override
+    @GetMapping("api/VehiculosDeSociosEnParqueaderos/{memberDocument}")
+    public ResponseEntity<List<VehicleInParkingByMembers>> findVehiclesByMember(@PathVariable String memberDocument) {
+        lexicalAnalyzer.validateRegularExpression(memberDocument,"document");
+        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByMember(memberDocument));
+    }
+
+    @Override
+    @GetMapping("api/DetallesDelVehiculo/{id}")
+    public ResponseEntity<VehicleDetails> findVehicleDetailsById(@PathVariable Long id) {
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
+        return ResponseEntity.ok().body(serviceDesguace.findVehicleDetailsById(id));
+    }
+
+    @Override
+    @PostMapping("api/service/EnviarEmail")
+    public ResponseEntity<HashMap<String, String>> callSendEmail(@RequestBody EmailBodyPre emailBodySend) {
+        lexicalAnalyzer.validateRegularExpression(emailBodySend.getEmail(),"email");
+        lexicalAnalyzer.validateRegularExpression(emailBodySend.getPlaca(),"licensePlate");
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(emailBodySend.getParqueaderoId()),"id");
+        return ResponseEntity.ok().body(serviceDesguace.callSendEmail(emailBodySend));
+    }
+
+    @Override
+    @GetMapping("api/top10VehiculosEnParqueaderos/{id}")
+    public ResponseEntity<List<Top10VehicleInParking>> TopVehicleInParkingByParkingId(@PathVariable Long id) {
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
+        return ResponseEntity.ok().body(serviceDesguace.TopVehicleInParkingByParkingId(id));
+    }
+
+    @Override
+    @GetMapping("api/VehiculosEnParqueaderos")
+    public ResponseEntity<List<VehicleDetails>> VehicleInParkingForTheFirstTime() {
+        return ResponseEntity.ok().body(serviceDesguace.VehicleInParkingForTheFirstTime());
+    }
+
+    @Override
+    @GetMapping("api/gananciaPorPeriodos/{id}")
+    public ResponseEntity<PeriodicEarnings> findPeriodicEarningsByParkingId(@PathVariable Long id) {
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
+        return ResponseEntity.ok().body(serviceDesguace.findPeriodicEarningsByParkingId(id));
+    }
+
+    @Override
+    @GetMapping("api/gananciaMaxima/{id}")
+    public ResponseEntity<MaximumIncome> MaximumIncomeForDay(@PathVariable Long id) {
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
+        return ResponseEntity.ok().body(serviceDesguace.MaximumIncomeForDay(id));
+    }
+
+    @Override
+    @GetMapping("api/top3parqueaderos")
+    public ResponseEntity<List<Top3Parking>> Top3ParkingThisYear() {
+        return ResponseEntity.ok().body(serviceDesguace.Top3ParkingThisYear());
+    }
+
+    @Override
+    @GetMapping("api/DatosParciales")
+    public ResponseEntity<List<VehicleByParking>> VehiclesInAParkingByPartialData(@RequestBody PartialData partialData) {
+        return ResponseEntity.ok().body(serviceDesguace.VehiclesInAParkingByPartialData(partialData));
+    }
+
+    @Override
+    @PostMapping("socios/crear")
+    public ResponseEntity<HashMap<String, String>> RegisterMember(@RequestBody Members members) {
+        return ResponseEntity.ok().body(serviceDesguace.RegisterMember(members));
+    }
+
+    @Override
+    @PutMapping("socios/actualizar")
+    public ResponseEntity<HashMap<String, String>> UpdateMember(@RequestBody Members members) {
+        return ResponseEntity.ok().body(serviceDesguace.UpdateMember(members));
+    }
+
+    @Override
+    @DeleteMapping("socios/eliminar/{id}")
+    public ResponseEntity<HashMap<String, String>> DeleteMember(@PathVariable Long id) {
+        return ResponseEntity.ok().body(serviceDesguace.DeleteMember(id));
+    }
+
+    @Override
+    @PostMapping("vehiculo/crear")
+    public ResponseEntity<HashMap<String, String>> RegisterVehicle(@RequestBody Vehicle vehicle) {
+        return ResponseEntity.ok().body(serviceDesguace.RegisterVehicle(vehicle));
+    }
+
+
+    @Override
+    @DeleteMapping("vehiculo/eliminar/{id}")
+    public ResponseEntity<HashMap<String, String>> DeleteVehicle(@PathVariable Long id) {
+        return ResponseEntity.ok().body(serviceDesguace.DeleteVehicle(id));
     }
 
     @Override
@@ -62,122 +161,26 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     }
 
     @Override
-    @GetMapping("VehicleByParking")
-    public ResponseEntity<List<VehicleByParking>> findVehiclesByParking(String parkingName) {
-        lexicalAnalyzer.validateRegularExpression(parkingName,"parkingName");
-        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByParking(parkingName));
-    }
-
-    @Override
-    @GetMapping("VehicleInParkingByMembers")
-    public ResponseEntity<List<VehicleInParkingByMembers>> findVehiclesByMember(String memberDocument) {
-    lexicalAnalyzer.validateRegularExpression(memberDocument,"document");
-        return ResponseEntity.ok().body(serviceDesguace.findVehiclesByMember(memberDocument));
-    }
-
-    @Override
-    @GetMapping("VehicleDetailsById/{id}")
-    public ResponseEntity<VehicleDetails> findVehicleDetailsById(@PathVariable Long id) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
-        return ResponseEntity.ok().body(serviceDesguace.findVehicleDetailsById(id));
-    }
-
-    @Override
-    @PostMapping("service/sendEmail")
-    public ResponseEntity<HashMap<String, String>> callSendEmail(@RequestBody EmailBodyPre emailBodySend) {
-        lexicalAnalyzer.validateRegularExpression(emailBodySend.getEmail(),"email");
-        lexicalAnalyzer.validateRegularExpression(emailBodySend.getPlaca(),"licensePlate");
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(emailBodySend.getParqueaderoId()),"id");
-        return ResponseEntity.ok().body(serviceDesguace.callSendEmail(emailBodySend));
-    }
-
-    @Override
-    @GetMapping("top10VehicleInParking/{id}")
-    public ResponseEntity<List<Top10VehicleInParking>> TopVehicleInParkingByParkingId(@PathVariable Long id) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
-        return ResponseEntity.ok().body(serviceDesguace.TopVehicleInParkingByParkingId(id));
-    }
-
-    @Override
-    public ResponseEntity<List<VehicleDetails>> VehicleInParkingForTheFirstTime() {
-        return ResponseEntity.ok().body(serviceDesguace.VehicleInParkingForTheFirstTime());
-    }
-
-    @Override
-    public ResponseEntity<PeriodicEarnings> findPeriodicEarningsByParkingId(Long id) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
-        return ResponseEntity.ok().body(serviceDesguace.findPeriodicEarningsByParkingId(id));
-    }
-
-    @Override
-    public ResponseEntity<MaximumIncome> MaximumIncomeForDay(Long id) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(id),"id");
-        return ResponseEntity.ok().body(serviceDesguace.MaximumIncomeForDay(id));
-    }
-
-    @Override
-    public ResponseEntity<List<Top3Parking>> Top3ParkingThisYear() {
-        return ResponseEntity.ok().body(serviceDesguace.Top3ParkingThisYear());
-    }
-
-    @Override
-    @GetMapping("partialData")
-    public ResponseEntity<List<VehicleByParking>> VehiclesInAParkingByPartialData(@RequestBody PartialData partialData) {
-        return ResponseEntity.ok().body(serviceDesguace.VehiclesInAParkingByPartialData(partialData));
-    }
-
-    @Override
-
-    public ResponseEntity<HashMap<String, String>> LinMemberToParking(@RequestBody MemberToParking membertoparking) {
+    @PostMapping("parqueadero/vincularSocio")
+    public ResponseEntity<HashMap<String, String>> LinkMemberToParking(@RequestBody MemberToParking membertoparking) {
         return ResponseEntity.ok().body(serviceDesguace.LinMemberToParking(membertoparking));
     }
 
     @Override
-    @PostMapping("socios/crear")
-    public ResponseEntity<HashMap<String, String>> RegisterMember(@RequestBody Members members) {
-        return ResponseEntity.ok().body(serviceDesguace.RegisterMember(members));
+    @PostMapping("parqueadero/crear")
+    public ResponseEntity<HashMap<String, String>> RegisterParking(@RequestBody Parking parking) {
+        return ResponseEntity.ok().body(serviceDesguace.RegisterParking(parking));
     }
 
     @Override
-    @PutMapping("socios/actualizar")
-    public ResponseEntity<HashMap<String, String>> UpdateMember(Members members) {
-        return ResponseEntity.ok().body(serviceDesguace.UpdateMember(members));
+    @PutMapping("parqueadero/actualizar")
+    public ResponseEntity<HashMap<String, String>> UpdateParking(@RequestBody Parking parking) {
+        return ResponseEntity.ok().body(serviceDesguace.UpdateParking(parking));
     }
 
     @Override
-    @DeleteMapping("socios/eliminar")
-    public ResponseEntity<HashMap<String, String>> DeleteMember(Long id) {
-        return ResponseEntity.ok().body(serviceDesguace.DeleteMember(id));
-    }
-
-    @Override
-    @PostMapping("vehiculo/crear")
-    public ResponseEntity<HashMap<String, String>> RegisterVehicle(Vehicle vehicle) {
-        return ResponseEntity.ok().body(serviceDesguace.RegisterVehicle(vehicle));
-    }
-
-
-    @Override
-    @DeleteMapping("vehiculo/eliminar")
-    public ResponseEntity<HashMap<String, String>> DeleteVehicle(Long id) {
-        return null;
-    }
-
-    @Override
-    @DeleteMapping("parqueadero/eliminar")
-    public ResponseEntity<HashMap<String, String>> RegisterParking(Parking parking) {
-        return null;
-    }
-
-    @Override
-    @DeleteMapping("parqueadero/eliminar")
-    public ResponseEntity<HashMap<String, String>> UpdateParking(Parking parking) {
-        return null;
-    }
-
-    @Override
-    @DeleteMapping("parqueadero/eliminar")
-    public ResponseEntity<HashMap<String, String>> DeleteParking(Long id) {
-        return null;
+    @DeleteMapping("parqueadero/eliminar/{id}")
+    public ResponseEntity<HashMap<String, String>> DeleteParking(@PathVariable Long id) {
+        return ResponseEntity.ok().body(serviceDesguace.DeleteParking(id));
     }
 }
