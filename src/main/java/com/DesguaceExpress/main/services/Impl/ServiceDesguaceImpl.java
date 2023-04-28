@@ -362,7 +362,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> UpdateParking(Parking parking) {
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
-        if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){//TODO
+        if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
         }
         parkingRepository.save(parking);
