@@ -26,25 +26,26 @@ public class LexicalAnalyzer {
      * @param cadena la cadena que va verificar (name, phone, email...)
      * @param tipo el tipo de cadena que corresponde
      */
-    public void validateRegularExpression(String cadena, String tipo) {
+    public void validateRegularExpression(String cadena, String tipo,Boolean nullable) {
 
         switch (tipo) {
             case "id" -> regex = "^([0-9]{1,2000000})$";
             case "email" -> regex = "^([A-Za-z0-9]{1})([-_\\.A-Za-z0-9]{0,})([A-Za-z0-9]{1})@([A-Za-z0-9\\.]+)*([A-Za-z]{2,})$";
             case "licensePlate" -> regex = "^([A-Za-z0-9]{6})$";
             case "phone" -> regex = "^([0-9]{3,})$";
-            case "parkingName" -> regex = "^([A-Za-z0-9\\,\\' -]{4,30})$";
-            case "firstName", "lastName", "location" -> regex = "^([A-Za-z]{4,30})$";
+            case "parkingName", "location", "vehicle" -> regex = "^([A-Za-z0-9\\,\\' -]{4,30})$";
+            case "firstName", "lastName" -> regex = "^([A-Za-z]{4,30})$";
             case "date" -> regex = "^([0-9]{1,2})([-])([0-9]{1,2})([-])([0-9]{2,4})$";
             case "document" -> regex = "^([0-9]{4,30})$";
             case "year" -> regex = "^([0-9]{4})$";
+            case "partiaLicensePlate" -> regex = "^([A-Za-z0-9]{1,6})$";
             default -> regex = null;
         }
         //si tipo no es valido continua
-        if (regex != null && cadena!=null) {
+        if (regex != null) {
             pat = Pattern.compile(regex);
             math = pat.matcher(cadena);
-            if (!math.find()) {
+            if (!math.find() && !nullable) {
                 throw new InvalidExpressionException(HttpStatus.PRECONDITION_FAILED, "el campo de " + tipo + " no es valido");
             }
         }

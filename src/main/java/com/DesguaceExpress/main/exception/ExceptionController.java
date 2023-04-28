@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.exception;
 
 import com.DesguaceExpress.main.exception.custom.*;
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -63,4 +64,21 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(data);
     }
 
+    @ExceptionHandler(DataIsInUse.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String, Object>> headDataIsInUse(DataIsInUse exception){
+        Map<String, Object> data = new HashMap<>();
+        data.put("reason",exception.getReason());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(data);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> headPropertyValueException(DataIsInUse exception){
+        Map<String, Object> data = new HashMap<>();
+        data.put("reason","problemas de coneccion");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
+    }
 }

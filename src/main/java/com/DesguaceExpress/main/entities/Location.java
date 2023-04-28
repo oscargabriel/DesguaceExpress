@@ -2,10 +2,7 @@ package com.DesguaceExpress.main.entities;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 
 
@@ -16,9 +13,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @Builder
+@ToString
 @Audited
 @Table(name = "location")
-public class Location implements Serializable {
+public class    Location implements Serializable {
 
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)

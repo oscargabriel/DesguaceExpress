@@ -1,6 +1,7 @@
 package com.DesguaceExpress.main.services;
 
 import com.DesguaceExpress.main.dto.*;
+import com.DesguaceExpress.main.entities.Location;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
@@ -120,6 +121,11 @@ public interface ServiceDesguace {
      */
     public List<VehicleByParking> VehiclesInAParkingByPartialData(PartialData partialData);
 
+    /**
+     * vincular un socio a un parqueadero, si el parqueadero esta sin socio no se pueden ingresar vegiculos
+     * @param membertoparking SocioId, Parking Id
+     * @return mensaje positivo si los datos son correctos
+     */
     public HashMap<String, String> LinMemberToParking(MemberToParking membertoparking);
 
 
@@ -138,4 +144,6 @@ public interface ServiceDesguace {
     public HashMap<String, String> UpdateParking(Parking parking);
 
     public HashMap<String, String> DeleteParking(Long id);
+
+    public HashMap<String, String> RegisterLocation(Location location);
 }

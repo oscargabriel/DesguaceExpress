@@ -1,10 +1,10 @@
 package com.DesguaceExpress.main.controllers;
 
 import com.DesguaceExpress.main.dto.*;
+import com.DesguaceExpress.main.entities.Location;
 import com.DesguaceExpress.main.entities.Members;
 import com.DesguaceExpress.main.entities.Parking;
 import com.DesguaceExpress.main.entities.Vehicle;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -136,6 +136,7 @@ public interface ControllerDesguace {
     public ResponseEntity<HashMap<String, String>> DeleteParking(Long id);
 
 
+    public ResponseEntity<HashMap<String, String>> RegisterLocation(Location location);
 
 
 

@@ -8,7 +8,7 @@ class LexicalAnalyzerTest {
 
     @Test
     void validateRegularExpression() {
-        lexicalAnalyzer.validateRegularExpression("oas@gma.cs","email");
+        lexicalAnalyzer.validateRegularExpression("oas@gma.cs","email",null);
 
 
 

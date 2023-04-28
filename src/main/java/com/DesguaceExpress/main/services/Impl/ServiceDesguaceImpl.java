@@ -2,10 +2,8 @@ package com.DesguaceExpress.main.services.Impl;
 
 import com.DesguaceExpress.main.controllers.Impl.ControllerDesguaceImpl;
 import com.DesguaceExpress.main.dto.*;
-import com.DesguaceExpress.main.entities.Members;
-import com.DesguaceExpress.main.entities.Parking;
-import com.DesguaceExpress.main.entities.Vehicle;
-import com.DesguaceExpress.main.entities.VehicleParking;
+import com.DesguaceExpress.main.entities.*;
+import com.DesguaceExpress.main.exception.custom.DataIsInUse;
 import com.DesguaceExpress.main.exception.custom.DataNotFound;
 import com.DesguaceExpress.main.exception.custom.NoMemberInTheParking;
 import com.DesguaceExpress.main.exception.custom.VehicleRegistryIsBad;
@@ -186,8 +184,10 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public List<Top3Parking> Top3ParkingThisYear() {
-        LocalDateTime dateInit = LocalDateTime.now();
-        LocalDateTime dateFin = dateInit.minusYears(1L);
+        //saca la fecha actual
+        LocalDateTime dateFin = LocalDateTime.now();
+        //le resta un año
+        LocalDateTime dateInit = dateFin.minusYears(1L);
         return repositoryDesguace.Top3ParkingThisYear(dateInit,dateFin);
     }
 
@@ -258,7 +258,15 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> RegisterMember(Members members) {
         members.setId(repositoryDesguace.MembersID());
-        //TODO:verificar unic key
+        if(repositoryDesguace.FindIfDocumentIsInUse(members.getDocument(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"documento ya esta en uso");
+        }
+        if(repositoryDesguace.FindIfEmailIsInUse(members.getEmail(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"email ya esta en uso");
+        }
+        if(repositoryDesguace.FindIfPhoneIsInUse(members.getPhone(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
+        }
         membersRepository.save(members);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -269,7 +277,15 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> UpdateMember(Members members) {
         repositoryDesguace.findMemberById(members.getId());
-        //TODO:verificar unic key
+        if(repositoryDesguace.FindIfDocumentIsInUse(members.getDocument(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"documento ya esta en uso");
+        }
+        if(repositoryDesguace.FindIfEmailIsInUse(members.getEmail(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"email ya esta en uso");
+        }
+        if(repositoryDesguace.FindIfPhoneIsInUse(members.getPhone(),members.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
+        }
         membersRepository.save(members);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -284,6 +300,11 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         //busca los autos que le pertenece y los borra
         repositoryDesguace.FindVehicleIdByMemberId(id).forEach(x->
         {
+            repositoryDesguace.FindVehicleParkingIdByMemberId(x).forEach(y->
+            {
+                //busca los registros y los borra
+                vehicleParkingRepository.deleteById(y);
+            });
             vehicleRepository.deleteById(x);
         });
         //elimina al socio
@@ -297,7 +318,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> RegisterVehicle(Vehicle vehicle) {
         vehicle.setId(repositoryDesguace.VehicleID());
-        //TODO:verificar unic key
+        if(repositoryDesguace.FindIfLicensePlateIsInUse(vehicle.getLicensePlate(), vehicle.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"placa ya esta en uso");
+        }
         Members members = repositoryDesguace.findMemberById(vehicle.getMembersId().getId());
         vehicle.setMembersId(members);
         vehicleRepository.save(vehicle);
@@ -310,6 +333,11 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> DeleteVehicle(Long id) {
         repositoryDesguace.FindVehicleById(id);
+        repositoryDesguace.FindVehicleParkingIdByMemberId(id).forEach(x->
+        {
+            //busca los registros y los borra
+            vehicleParkingRepository.deleteById(x);
+        });
         vehicleRepository.deleteById(id);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -320,7 +348,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> RegisterParking(Parking parking) {
         parking.setId(repositoryDesguace.ParkingID());
-        //TODO:verificar unic key
+        if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
+            throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
+        }
         parking.setLocationId(locationRepository.save(parking.getLocationId()));
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -332,7 +362,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> UpdateParking(Parking parking) {
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
-        //TODO:verificar unic key
+        if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){//TODO
+            throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
+        }
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -347,6 +379,16 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se elimino el parqueadero ");
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> RegisterLocation(Location location) {
+        location.setId(repositoryDesguace.LocationID());
+        locationRepository.save(location);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se añadio la locacion ");
         return hashMap;
     }
 }

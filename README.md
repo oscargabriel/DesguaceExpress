@@ -55,3 +55,5 @@ ejustes para la coneccion con la aplicacion mediante HTTP
 
 tomar en cuenta para algun ajuste en las propiedades
 
+
+

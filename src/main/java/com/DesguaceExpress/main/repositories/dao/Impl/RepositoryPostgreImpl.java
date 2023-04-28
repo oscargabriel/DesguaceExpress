@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * implementacion del repositorio, se usa una base de datos de PostgreSQL, se hacen las consultas con EntityManager
@@ -628,8 +629,24 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT v.id " +
                         "From Members m " +
-                        "JOIN Vehicle v ON m.id=v.memebersId " +
+                        "JOIN Vehicle v ON m.id=v.membersId " +
                         "WHERE m.id=:id ",Long.class
+        );
+        query.setParameter("id",id);
+        try {
+            return query.getResultList();
+        }catch (NoResultException e){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
+        }
+    }
+
+    @Override
+    public List<Long> FindVehicleParkingIdByMemberId(Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT vp.id " +
+                        "From VehicleParking vp " +
+                        "JOIN Vehicle v ON v.id=vp.vehicleId " +
+                        "WHERE v.id=:id ",Long.class
         );
         query.setParameter("id",id);
         try {
@@ -679,5 +696,90 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         }catch (NoResultException e){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
         }
+    }
+
+    @Override
+    public Boolean FindIfLicensePlateIsInUse(String licensePlate, Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT v.id " +
+                        "From Vehicle v " +
+                        "WHERE v.licensePlate=:licensePlate ",Long.class
+        );
+        query.setParameter("licensePlate",licensePlate);
+        Long l;
+        try {
+            l = query.getSingleResult();
+        }catch (NoResultException e){
+            return false;
+        }
+        return !Objects.equals(l, id);
+    }
+
+    @Override
+    public Boolean FindIfDocumentIsInUse(String document, Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT m.id " +
+                        "From Members m " +
+                        "WHERE m.document=:document ",Long.class
+        );
+        query.setParameter("document",document);
+        Long l;
+        try {
+            l = query.getSingleResult();
+        }catch (NoResultException e){
+            return false;
+        }
+        return !Objects.equals(l, id);
+    }
+
+    @Override
+    public Boolean FindIfEmailIsInUse(String email, Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT m.id " +
+                        "From Members m " +
+                        "WHERE m.email=:email ",Long.class
+        );
+        query.setParameter("email",email);
+        Long l;
+        try {
+            l = query.getSingleResult();
+        }catch (NoResultException e){
+            return false;
+        }
+        return !Objects.equals(l, id);
+    }
+
+    @Override
+    public Boolean FindIfPhoneIsInUse(Long phone, Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT m.id " +
+                        "From Members m " +
+                        "WHERE m.phone=:phone ",Long.class
+        );
+        query.setParameter("phone",phone);
+        Long l;
+        try {
+            l = query.getSingleResult();
+        }catch (NoResultException e){
+            return false;
+        }
+        return !Objects.equals(l, id);
+    }
+
+    @Override
+    public Boolean FindIfParkingNameIsInUse(String parkingName, Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT p.id " +
+                        "From Parking p " +
+                        "WHERE p.parkingName=:parkingName ",Long.class
+        );
+        query.setParameter("parkingName",parkingName);
+        Long l;
+        try {
+            l = query.getSingleResult();
+        }catch (NoResultException e){
+            return false;
+        }
+        return !Objects.equals(l, id);
     }
 }

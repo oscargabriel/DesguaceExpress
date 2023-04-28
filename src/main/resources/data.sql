@@ -202,10 +202,10 @@ insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) valu
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (95, '14/09/2022', '29/09/2022', 678.3, 3, 27);
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (97, '27/08/2022', '11/10/2022', 345.5, 10, 9);
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (98, '04/09/2022', '26/09/2022', 456.6, 10, 45);
-insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (99, '20/09/2022', '24/09/2022', 345.5, 5, 24);
+insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (99, '20/09/2022', '28/04/2023', 345.5, 5, 24);
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (100, '02/09/2022', '13/10/2022', 567.5, 4, 26);
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (101, '18/11/2022', '17/02/2023', 456.6, 8, 7);
-insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (102, '21/12/2022', '19/02/2023', 123.3, 5, 22);
+insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (102, '21/12/2022', '19/04/2023', 123.3, 5, 22);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (103, '06/12/2022', null, 10, 27);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (104, '23/11/2022', null, 1, 16);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (105, '13/12/2022', null, 10, 10);
@@ -222,7 +222,7 @@ insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (11
 insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (116, '23/11/2022', '16/02/2023', 678.1, 3, 29);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (117, '02/12/2022', null, 3, 45);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (118, '03/12/2022', null, 4, 41);
-insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (119, '02/12/2022', '21/01/2023', 345.3, 5, 14);
+insert into vehicle_parking (id, entry, exit, cost, parking_id, vehicle_id) values (119, '02/12/2022', '23/04/2023', 345.3, 5, 14);
 insert into vehicle_parking (id, entry, exit, parking_id, vehicle_id) values (120, '11/12/2022', null, 8, 25);
 
 

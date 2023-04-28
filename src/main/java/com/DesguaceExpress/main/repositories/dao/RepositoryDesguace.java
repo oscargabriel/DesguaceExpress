@@ -207,13 +207,35 @@ public interface RepositoryDesguace {
      */
     public Boolean FindMemberInParking(Long id);
 
-
+    /**
+     * buscar todos los vehiculos que le pertenecen a un socio
+     * @param id Long del socio
+     * @return lista con los id de los vehiculos
+     */
     public List<Long> FindVehicleIdByMemberId(Long id);
+
+    /**
+     * buscar todos los vehiculos que le pertenecen a un socio
+     * @param id Long del socio
+     * @return lista con los id de los vehiculos
+     */
+    public List<Long> FindVehicleParkingIdByMemberId(Long id);
 
     public Vehicle FindVehicleById(Long id);
 
     public Location FindLocationById(Long id);
 
     public Parking FindParkingById(Long id);
+
+
+    public Boolean FindIfLicensePlateIsInUse(String licensePlate, Long id);
+
+    public Boolean FindIfDocumentIsInUse(String document, Long id);
+
+    public Boolean FindIfEmailIsInUse(String email, Long id);
+
+    public Boolean FindIfPhoneIsInUse(Long phone, Long id);
+
+    public Boolean FindIfParkingNameIsInUse(String parkingName, Long id);
 
 }
