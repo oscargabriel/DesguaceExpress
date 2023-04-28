@@ -23,7 +23,7 @@ class ServiceDesguaceImplTest {
 
     @Autowired
     ServiceDesguaceImpl serviceDesguace;
-/*
+
     @Test
     void topVehicleInParking() {
         int size = serviceDesguace.TopVehicleInParking().size();
@@ -77,7 +77,7 @@ class ServiceDesguaceImplTest {
         List<VehicleByParking> vehicleByParkings = serviceDesguace.VehiclesInAParkingByPartialData(partialData);
         assertNotEquals(null,vehicleByParkings);
     }
-*/
+
     @Test
     void deleteMember() {
         System.out.println(serviceDesguace.DeleteMember(2L));
