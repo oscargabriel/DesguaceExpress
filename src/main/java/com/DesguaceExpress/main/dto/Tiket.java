@@ -17,5 +17,5 @@ public class Tiket {
 
     private String licencePlate;
 
-    private Long idParking;
+    private Long parkingId;
 }

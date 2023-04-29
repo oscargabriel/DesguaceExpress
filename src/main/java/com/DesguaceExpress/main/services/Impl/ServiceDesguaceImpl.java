@@ -67,7 +67,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     public HashMap<String, Long> RegistrarEntrada(String licensePlate, Long idParking) {
 
         VehicleParking vehicleParking = VehicleParking.builder()
-                .id(repositoryDesguace.VehicleParkingID())
                 .parkingId(repositoryDesguace.findParkingById(idParking))
                 .vehicleId(repositoryDesguace.findVehicleByLicensePlate(licensePlate))
                 .build();
@@ -257,7 +256,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterMember(Members members) {
-        members.setId(repositoryDesguace.MembersID());
         if(repositoryDesguace.FindIfDocumentIsInUse(members.getDocument(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"documento ya esta en uso");
         }
@@ -317,7 +315,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterVehicle(Vehicle vehicle) {
-        vehicle.setId(repositoryDesguace.VehicleID());
         if(repositoryDesguace.FindIfLicensePlateIsInUse(vehicle.getLicensePlate(), vehicle.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"placa ya esta en uso");
         }
@@ -347,7 +344,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterParking(Parking parking) {
-        parking.setId(repositoryDesguace.ParkingID());
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
         }
@@ -384,7 +380,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterLocation(Location location) {
-        location.setId(repositoryDesguace.LocationID());
         locationRepository.save(location);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente

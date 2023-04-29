@@ -118,7 +118,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @PostMapping("socios/crear")
     public ResponseEntity<HashMap<String, String>> RegisterMember(@RequestBody Members members) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(members.getId()),"id",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(members.getEmail()),"email",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(members.getDocument()),"document",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(members.getPhone()),"phone",false);
@@ -149,10 +148,9 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @PostMapping("vehiculo/crear")
     public ResponseEntity<HashMap<String, String>> RegisterVehicle(@RequestBody Vehicle vehicle) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getId()),"id",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getModel()),"vehicle",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getMake()),"vehicle",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getType()),"vehicle",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getModel()),"model",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getMake()),"make",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getType()),"type",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getYear()),"year",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(vehicle.getLicensePlate()),"licensePlate",false);
         return ResponseEntity.ok().body(serviceDesguace.RegisterVehicle(vehicle));
@@ -170,9 +168,9 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @PostMapping("vehiculo/registrarEntrada")
     public ResponseEntity<HashMap<String, Long>> RegistrarEntrada(@RequestBody Tiket tiket) {
         lexicalAnalyzer.validateRegularExpression(tiket.getLicencePlate(),"licensePlate",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(tiket.getIdParking()),"id",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(tiket.getParkingId()),"id",false);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                serviceDesguace.RegistrarEntrada(tiket.getLicencePlate(), tiket.getIdParking())
+                serviceDesguace.RegistrarEntrada(tiket.getLicencePlate(), tiket.getParkingId())
         );
     }
 
@@ -180,9 +178,9 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @PutMapping("vehiculo/registrarSalida")
     public ResponseEntity<HashMap<String, String>> RegistrarSalida(@RequestBody Tiket tiket) {
         lexicalAnalyzer.validateRegularExpression(tiket.getLicencePlate(),"licensePlate",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(tiket.getIdParking()),"id",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(tiket.getParkingId()),"id",false);
         return ResponseEntity.ok().body(
-                serviceDesguace.RegistrarSalida(tiket.getLicencePlate(),tiket.getIdParking())
+                serviceDesguace.RegistrarSalida(tiket.getLicencePlate(),tiket.getParkingId())
         );
     }
 
@@ -198,7 +196,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @PostMapping("parqueadero/crear")
     public ResponseEntity<HashMap<String, String>> RegisterParking(@RequestBody Parking parking) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(parking.getId()),"id",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(parking.getName()),"parkingName",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(parking.getCurrentCapacity()),"id",false);
         lexicalAnalyzer.validateRegularExpression(String.valueOf(parking.getMaxCapacity()),"id",false);
@@ -227,11 +224,10 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @PostMapping("ubicacion/crear")
     public ResponseEntity<HashMap<String, String>> RegisterLocation(@RequestBody Location location) {
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getId()),"location",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getState()),"location",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getCountry()),"location",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getUbication()),"location",false);
-        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getDepartament()),"location",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getState()),"state",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getCountry()),"country",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getUbication()),"ubication",false);
+        lexicalAnalyzer.validateRegularExpression(String.valueOf(location.getDepartament()),"departament",false);
 
         return ResponseEntity.ok().body(serviceDesguace.RegisterLocation(location));
     }

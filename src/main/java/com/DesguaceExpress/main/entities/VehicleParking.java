@@ -29,8 +29,9 @@ import java.util.Date;
 public class VehicleParking implements Serializable {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @Column(name = "entry", nullable = false)
     @CreationTimestamp

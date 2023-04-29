@@ -33,10 +33,11 @@ public class LexicalAnalyzer {
             case "email" -> regex = "^([A-Za-z0-9]{1})([-_\\.A-Za-z0-9]{0,})([A-Za-z0-9]{1})@([A-Za-z0-9\\.]+)*([A-Za-z]{2,})$";
             case "licensePlate" -> regex = "^([A-Za-z0-9]{6})$";
             case "phone" -> regex = "^([0-9]{3,})$";
-            case "parkingName", "location", "vehicle" -> regex = "^([A-Za-z0-9\\,\\' -]{4,30})$";
+            case "make", "model", "type" -> regex = "^([A-Za-z0-9\\,\\' -]{4,30})$";
+            case "parkingName", "state", "country", "ubication", "city" -> regex = "^([A-Za-z0-9\\,\\' -]{4,30})$";
             case "firstName", "lastName" -> regex = "^([A-Za-z]{4,30})$";
             case "date" -> regex = "^([0-9]{1,2})([-])([0-9]{1,2})([-])([0-9]{2,4})$";
-            case "document" -> regex = "^([0-9]{4,30})$";
+            case "document" -> regex = "^([A-Za-z]{0,2})(-{0,1})([0-9]{4,30})$";
             case "year" -> regex = "^([0-9]{4})$";
             case "partiaLicensePlate" -> regex = "^([A-Za-z0-9]{1,6})$";
             default -> regex = null;

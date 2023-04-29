@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 //import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
 
@@ -22,7 +23,7 @@ public class Members implements Serializable {
 
     @Id
     private Long id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "document", nullable = false, unique = true)
     private String document;
 

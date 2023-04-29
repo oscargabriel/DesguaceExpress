@@ -21,7 +21,7 @@ import java.util.Date;
 public class Vehicle implements Serializable {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "license_plate", nullable = false, unique = true)

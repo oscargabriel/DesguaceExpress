@@ -24,33 +24,6 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     @PersistenceContext//definir la variable para las consultas
     private EntityManager entityManager;
 
-    //----------------------------------
-    @Override
-    public Long LocationID() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Location",Long.class);
-        return query.getSingleResult()+1L;
-    }
-    @Override
-    public Long MembersID() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Members",Long.class);
-        return query.getSingleResult()+1L;
-    }
-    @Override
-    public Long ParkingID() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Parking",Long.class);
-        return query.getSingleResult()+1L;
-    }
-    @Override
-    public Long VehicleID() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM Vehicle",Long.class);
-        return query.getSingleResult()+1L;
-    }
-    @Override
-    public Long VehicleParkingID() {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT MAX(id) FROM VehicleParking",Long.class);
-        return query.getSingleResult()+1L;
-    }
-    //----------------------------------
     @Override
     public List<Top10VehicleInParking> TopVehicleInParking() {
         List<Top10VehicleInParking> top10Vehicle = new ArrayList<Top10VehicleInParking>();

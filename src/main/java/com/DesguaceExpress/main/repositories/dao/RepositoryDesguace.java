@@ -13,12 +13,6 @@ import java.util.List;
  */
 public interface RepositoryDesguace {
 
-    public Long LocationID();
-    public Long MembersID();
-    public Long ParkingID();
-    public Long VehicleID();
-    public Long VehicleParkingID();
-
     //regresar los 10 vehículos que más veces se han registrado en los diferentes
     // parqueaderos y cuantas veces han sido
 

@@ -23,7 +23,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public ResponseEntity<Map<String, Object>> headleNoMemberInTheParking(NoMemberInTheParking exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason","No existe un socio registrado en el parqueadero "+exception.getReason());
+        data.put("razon","No existe un socio registrado en el parqueadero "+exception.getReason());
 
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(data);
     }
@@ -32,7 +32,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, Object>> headDataNotFound(DataNotFound exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason",exception.getReason());
+        data.put("razon",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
     }
@@ -41,7 +41,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, Object>> headVehicleRegistryIsOpen(VehicleRegistryIsBad exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason",exception.getReason());
+        data.put("razon",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
     }
@@ -50,7 +50,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, Object>> headEmailOutOfService(EmailOutOfService exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason",exception.getReason());
+        data.put("razon",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
     }
@@ -59,7 +59,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     public ResponseEntity<Map<String, Object>> headInvalidExpressionException(InvalidExpressionException exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason",exception.getReason());
+        data.put("razon",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(data);
     }
@@ -68,7 +68,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Map<String, Object>> headDataIsInUse(DataIsInUse exception){
         Map<String, Object> data = new HashMap<>();
-        data.put("reason",exception.getReason());
+        data.put("razon",exception.getReason());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(data);
     }
