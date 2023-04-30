@@ -135,6 +135,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public List<VehicleInParkingByMembers> findVehiclesByMember(String memberDocument) {
+
         //1 buscar socio por documento si no se encuentra devoler un throw
         Members members = repositoryDesguace.findMemberByDocument(memberDocument);
         //2 buscar vehiculos del socio que esten parqueados si no encuentra devolver un 200
@@ -244,7 +245,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         //busca parking correspondiente al id
         Parking parking = repositoryDesguace.findParkingById(membertoparking.getParkingId());
         //guarda el socio en el parquin para guardarlo en la db
-        parking.setMembersId(members);
+        parking.setMembersId(members.getId());
         //guarda el parking actualizado con el nuevo socio
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -344,10 +345,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterParking(Parking parking) {
+        Members members = repositoryDesguace.findMemberById(parking.getMembersId());
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
-            throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
+            throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parqueadero ya esta en uso");
         }
-        parking.setLocationId(locationRepository.save(parking.getLocationId()));
+        parking.setCurrentCapacity(0);
+        parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -357,6 +360,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> UpdateParking(Parking parking) {
+        Parking p = repositoryDesguace.FindParkingById(parking.getId());
+        parking.setCurrentCapacity(p.getCurrentCapacity());
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");

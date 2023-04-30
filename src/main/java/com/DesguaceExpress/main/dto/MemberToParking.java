@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class MemberToParking {
 
-    private Long MembersId;
+    private Long membersId;
 
-    private Long ParkingId;
+    private Long parkingId;
 }

@@ -3,6 +3,7 @@ package com.DesguaceExpress.main.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.envers.Audited;
 //import lombok.Builder;
@@ -16,6 +17,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @Audited
+@ToString
 @Table(name = "parking")
 public class Parking implements Serializable {
 
@@ -44,15 +46,15 @@ public class Parking implements Serializable {
             foreignKey = @ForeignKey(name = "fk_parking_location"))
     private Location locationId;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    //@OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "members_id",
-            foreignKey = @ForeignKey(name = "fk_parking_members"))
-    private Members membersId;
+            foreignKey = @ForeignKey(name = "fk_parking_members"), nullable = true)
+    private Long membersId;
 
     public Parking() {
     }
 
-    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, Location locationId, Members membersId) {
+    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, Location locationId, Long membersId) {
         this.id = id;
         this.name = name;
         this.currentCapacity = currentCapacity;
@@ -114,11 +116,11 @@ public class Parking implements Serializable {
         this.locationId = locationId;
     }
 
-    public Members getMembersId() {
+    public Long getMembersId() {
         return membersId;
     }
 
-    public void setMembersId(Members membersId) {
+    public void setMembersId(Long membersId) {
         this.membersId = membersId;
     }
 }

@@ -484,6 +484,9 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                                 .income((Double) x[0])
                                 .parkingName((String) x[1])
                         .build()));
+        if(top3Parkings.size()==0){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueaderos para la busqueda");
+        }
         return top3Parkings;
     }
 
@@ -574,10 +577,10 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                             .build())
             );
         } catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculos en el parqueadero "+id);
         }
         if(vehicleByParkings.size()==0){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"no se encontraron vehiculos en el parqueadero "+id);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculos en el parqueadero "+id);
         }
         return vehicleByParkings;
     }
@@ -653,7 +656,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         try {
             return query.getSingleResult();
         }catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo id "+id);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"la locationId id "+id);
         }
     }
 
@@ -744,9 +747,9 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         TypedQuery<Long> query = entityManager.createQuery(
                 "SELECT p.id " +
                         "From Parking p " +
-                        "WHERE p.parkingName=:parkingName ",Long.class
+                        "WHERE p.name=:name ",Long.class
         );
-        query.setParameter("parkingName",parkingName);
+        query.setParameter("name",parkingName);
         Long l;
         try {
             l = query.getSingleResult();
@@ -755,4 +758,6 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         }
         return !Objects.equals(l, id);
     }
+
+
 }
