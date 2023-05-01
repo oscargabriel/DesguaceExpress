@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "d7762c37-c3f9-49c0-8e27-9e222c45f7e2",
-		"name": "DesguaceExpress",
+		"name": "Desguace Express",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25124664",
 		"_collection_link": "https://lunar-space-146176.postman.co/workspace/Curso-JS---NodeJS~a9fa858f-7cb2-4839-96bb-2c8e5a9df0aa/collection/25124664-d7762c37-c3f9-49c0-8e27-9e222c45f7e2?action=share&creator=25124664&source=collection_link"
@@ -32,37 +32,6 @@
 					"response": []
 				},
 				{
-					"name": "sendEmail",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"wcameli3@yahoo.co.jp\", \r\n    \"placa\": \"55CD72\", \r\n    \"mensaje\": \"hola mundo\",\r\n    \"parqueaderoId\": 10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8082/api/service/EnviarEmail",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"api",
-								"service",
-								"EnviarEmail"
-							]
-						},
-						"description": "envia un email a un socio, siempre y cuando el vehiculo se encuentre en el parqueadero"
-					},
-					"response": []
-				},
-				{
 					"name": "buscar por datos parciales",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -72,7 +41,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"parkingId\": 2,\r\n    \"partialLicensePlate\": \"AB\",\r\n    \"dateInit\": \"02-06-2000\",\r\n    \"dateEnd\": \"05-06-2023\"\r\n\r\n}",
+							"raw": "{\r\n    \"parkingId\": 1,\r\n    \"partialLicensePlate\": \"F\",\r\n    \"dateInit\": \"02-06-2000\",\r\n    \"dateEnd\": \"05-06-3000\"\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -101,7 +70,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/VehiculosEnParqueadero/Kris, Reichel and Dibbert",
+							"raw": "http://localhost:8082/api/VehiculosEnParqueadero/desguace prime",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -110,7 +79,7 @@
 							"path": [
 								"api",
 								"VehiculosEnParqueadero",
-								"Kris, Reichel and Dibbert"
+								"desguace prime"
 							]
 						},
 						"description": "mediante un nombre de parqueadero recibido por Path busca los vehiculos que se encuentren parqueados"
@@ -123,7 +92,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/VehiculosDeSociosEnParqueaderos/5095992302",
+							"raw": "http://localhost:8082/api/VehiculosDeSociosEnParqueaderos/v-123123123",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -132,7 +101,7 @@
 							"path": [
 								"api",
 								"VehiculosDeSociosEnParqueaderos",
-								"5095992302"
+								"v-123123123"
 							]
 						},
 						"description": "mediante un numero de docuemnto recibido por Path se buscan los vehiculos que esten en los parqueaderos"
@@ -145,7 +114,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/DetallesDelVehiculo/44",
+							"raw": "http://localhost:8082/api/DetallesDelVehiculo/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -154,7 +123,7 @@
 							"path": [
 								"api",
 								"DetallesDelVehiculo",
-								"44"
+								"1"
 							]
 						},
 						"description": "mediante un id de vehiculo por path busca si esta en un parqueadero y devuelve la informacion, con el dato extra si a estado en ese parqueadero previamente"
@@ -167,7 +136,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/top10VehiculosEnParqueaderos/6",
+							"raw": "http://localhost:8082/api/top10VehiculosEnParqueaderos/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -176,7 +145,7 @@
 							"path": [
 								"api",
 								"top10VehiculosEnParqueaderos",
-								"6"
+								"1"
 							]
 						},
 						"description": "con el id de parqueadero busca entre los vehiculos parqueados cuantas veces se han registrado en ese parqueadero"
@@ -210,7 +179,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/gananciaPorPeriodos/5",
+							"raw": "http://localhost:8082/api/gananciaPorPeriodos/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -219,7 +188,7 @@
 							"path": [
 								"api",
 								"gananciaPorPeriodos",
-								"5"
+								"1"
 							]
 						},
 						"description": "dado el id de un parqueadero por Path muestra las ganancias en un dia, en una semana, en un año"
@@ -232,7 +201,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/gananciaMaxima/5",
+							"raw": "http://localhost:8082/api/gananciaMaxima/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -241,7 +210,7 @@
 							"path": [
 								"api",
 								"gananciaMaxima",
-								"5"
+								"1"
 							]
 						},
 						"description": "por un parqueaderoId por Path muestra el dia con mayor ganacia y de cuanto fue"
@@ -268,6 +237,37 @@
 						"description": "muestra los 3 parqueaderos que registraron mayor ganancia en el ultimo año"
 					},
 					"response": []
+				},
+				{
+					"name": "sendEmail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"oscar@zambrano.com\", \r\n    \"placa\": \"9F0440\", \r\n    \"mensaje\": \"hola mundo\",\r\n    \"parqueaderoId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/service/EnviarEmail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"service",
+								"EnviarEmail"
+							]
+						},
+						"description": "envia un email a un socio, siempre y cuando el vehiculo se encuentre en el parqueadero"
+					},
+					"response": []
 				}
 			],
 			"description": "carpeta para las consultas al base de datos con diferentes parametros"
@@ -282,7 +282,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"licencePlate\": \"9F0440\",\r\n    \"idParking\": 1\r\n}",
+							"raw": "{\r\n    \"licencePlate\": \"9F0440\",\r\n    \"parkingId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -306,43 +306,13 @@
 					"response": []
 				},
 				{
-					"name": "registrar vehiculo",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"licensePlate\": \"qwerty\",\r\n    \"type\": \"asda\",\r\n    \"make\": \"asdqwet\",\r\n    \"model\": \"adqwett\",\r\n    \"year\": 1234,\r\n    \"membersId\": {\r\n            \"id\":20\r\n        }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8082/vehiculo/crear",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8082",
-							"path": [
-								"vehiculo",
-								"crear"
-							]
-						},
-						"description": "regsitra un vehiculo, con los datos y el id del socio a quien pertenece el vehiculo\n\nsi la placa esta en uso o el socio no existe devuelve un mensaje corrspondiente"
-					},
-					"response": []
-				},
-				{
 					"name": "registrar salida de vehiculo",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"licencePlate\": \"9F0440\",\r\n    \"idParking\": 1\r\n}",
+							"raw": "{\r\n    \"licencePlate\": \"9F0440\",\r\n    \"parkingId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -366,12 +336,42 @@
 					"response": []
 				},
 				{
+					"name": "registrar vehiculo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"licensePlate\": \"9F0440\",\r\n    \"type\": \"carro\",\r\n    \"make\": \"twimgo\",\r\n    \"model\": \"v8\",\r\n    \"year\": 1234,\r\n    \"membersId\": {\r\n            \"id\":1\r\n        }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/vehiculo/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"vehiculo",
+								"crear"
+							]
+						},
+						"description": "regsitra un vehiculo, con los datos y el id del socio a quien pertenece el vehiculo\n\nsi la placa esta en uso o el socio no existe devuelve un mensaje corrspondiente"
+					},
+					"response": []
+				},
+				{
 					"name": "eliminar vehiculo por id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/vehiculo/eliminar/3",
+							"raw": "http://localhost:8082/vehiculo/eliminar/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -380,7 +380,7 @@
 							"path": [
 								"vehiculo",
 								"eliminar",
-								"3"
+								"1"
 							]
 						},
 						"description": "elimina un vehiculo en cascada"
@@ -400,7 +400,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"document\": \"321312ads321321\",\r\n    \"firstName\": \"qwertyu\",\r\n    \"lastName\": \"hasasdasd\",\r\n    \"email\": \"asdqwad@adas.ad\",\r\n    \"phone\": 58750\r\n}",
+							"raw": "{\r\n    \"document\": \"v-123123\",\r\n    \"firstName\": \"oscar\",\r\n    \"lastName\": \"zambrano\",\r\n    \"email\": \"oscar@zambrano.comm\",\r\n    \"phone\": 587507897\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -430,7 +430,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"document\": \"987987\",\r\n    \"firstName\": \"poiuyt\",\r\n    \"lastName\": \"hasauyi\",\r\n    \"email\": \"poiuyd@adas.ad\",\r\n    \"phone\": 5875067890\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"document\": \"v-123123123\",\r\n    \"firstName\": \"gabriel\",\r\n    \"lastName\": \"pinto\",\r\n    \"email\": \"gabriel@pinto.ad\",\r\n    \"phone\": 5875067890\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -459,7 +459,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/socios/eliminar/2",
+							"raw": "http://localhost:8082/socios/eliminar/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -468,7 +468,7 @@
 							"path": [
 								"socios",
 								"eliminar",
-								"2"
+								"1"
 							]
 						},
 						"description": "mediant un id recibido por Path borra al solocio en cascada"
@@ -484,8 +484,17 @@
 				{
 					"name": "vincular socio",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"membersId\": 1,\r\n    \"parkingId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8082/parqueadero/vincularSocio",
 							"protocol": "http",
@@ -502,12 +511,21 @@
 					"response": []
 				},
 				{
-					"name": "eliminar parqueadero",
+					"name": "desvincular socio",
 					"request": {
-						"method": "DELETE",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parkingId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8082/parqueadero/eliminar/{id}",
+							"raw": "http://localhost:8082/parqueadero/desvincularSocio",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -515,8 +533,37 @@
 							"port": "8082",
 							"path": [
 								"parqueadero",
-								"eliminar",
-								"{id}"
+								"desvincularSocio"
+							]
+						},
+						"description": "devincula el socio que tenga un parqueadero dado su id"
+					},
+					"response": []
+				},
+				{
+					"name": "crear parqueadero",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"desguace prime\",\r\n    \"maxCapacity\": 20,\r\n    \"costHour\": 12.5,\r\n    \"locationId\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/parqueadero/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"parqueadero",
+								"crear"
 							]
 						}
 					},
@@ -527,6 +574,15 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"desguace v2\",\r\n    \"maxCapacity\": 20,\r\n    \"costHour\": 12.5,\r\n    \"locationId\": {\r\n        \"id\": 1\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8082/parqueadero/actualizar",
 							"protocol": "http",
@@ -543,12 +599,12 @@
 					"response": []
 				},
 				{
-					"name": "crear parqueadero",
+					"name": "eliminar parqueadero",
 					"request": {
-						"method": "POST",
+						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/parqueadero/crear",
+							"raw": "http://localhost:8082/parqueadero/eliminar/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -556,7 +612,8 @@
 							"port": "8082",
 							"path": [
 								"parqueadero",
-								"crear"
+								"eliminar",
+								"1"
 							]
 						}
 					},
@@ -569,13 +626,13 @@
 			"name": "ubicacion",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "registrar ubicacion",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"country\": \"qwerty\",\r\n    \"departament\": \"nqettull\",\r\n    \"state\": \"nuighgull\",\r\n    \"ubication\": \"nulcvbdfgeertul\"\r\n}",
+							"raw": "{\r\n    \"country\": \"Colombia\",\r\n    \"departament\": \"antioia\",\r\n    \"state\": \"medellin\",\r\n    \"ubication\": \"el poblado\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

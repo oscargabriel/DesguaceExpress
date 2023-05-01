@@ -65,7 +65,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, Long> RegistrarEntrada(String licensePlate, Long idParking) {
-
+        licensePlate=licensePlate.toUpperCase();
         VehicleParking vehicleParking = VehicleParking.builder()
                 .parkingId(repositoryDesguace.findParkingById(idParking))
                 .vehicleId(repositoryDesguace.findVehicleByLicensePlate(licensePlate))
@@ -98,7 +98,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegistrarSalida(String licensePlate, Long idParking) {
-
+        licensePlate=licensePlate.toUpperCase();
         VehicleParking vehicleParking = repositoryDesguace.findRegisterOpenByLicencePlate(licensePlate);
 
         if(vehicleParking==null){
@@ -135,7 +135,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public List<VehicleInParkingByMembers> findVehiclesByMember(String memberDocument) {
-
         //1 buscar socio por documento si no se encuentra devoler un throw
         Members members = repositoryDesguace.findMemberByDocument(memberDocument);
         //2 buscar vehiculos del socio que esten parqueados si no encuentra devolver un 200
@@ -151,6 +150,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> callSendEmail(EmailBodyPre emailBodyPre) {
+        emailBodyPre.setPlaca(emailBodyPre.getPlaca().toUpperCase());
         EmailBodySend emailBodySend = repositoryDesguace.VehicleInParkingByLicensePlate(emailBodyPre);
         return serviceSendEmail.SendEmail(emailBodySend);
     }
@@ -200,13 +200,13 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         indicador+=(partialData.getPartialLicensePlate()==null)?0:1;
         indicador+=(partialData.getDateInit()==null)?0:10;
         indicador+=(partialData.getDateEnd()==null)?0:100;
-        System.out.println(indicador);
         if(indicador==000){//no proporciono ningun dato
             return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
                     partialData.getParkingId()
             );
         }
         if(indicador==001){//solo proporciono la placa
+            partialData.setPartialLicensePlate(partialData.getPartialLicensePlate().toUpperCase());
             return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
                     partialData.getParkingId(),
                     partialData.getPartialLicensePlate()
@@ -225,6 +225,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         }
 
         if(indicador==111){//proporciono todos los datos
+            partialData.setPartialLicensePlate(partialData.getPartialLicensePlate().toUpperCase());
             return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
                     partialData.getParkingId(),
                     partialData.getPartialLicensePlate(),
@@ -240,11 +241,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         if(repositoryDesguace.FindMemberInParking(membertoparking.getParkingId())!=0L){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"plaza disponible para el parqueadero");
         }
+        if(repositoryDesguace.FindMemberInParkingsByMember(membertoparking.getMembersId())!=0){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"al socio disponible, ya esta registrado en otro parqueadero");
+        }
         //busca socio correspondiente al id
-
         Members members = repositoryDesguace.findMemberById(membertoparking.getMembersId());
         //busca parking correspondiente al id
-
         Parking parking = repositoryDesguace.findParkingById(membertoparking.getParkingId());
 
         //guarda el socio en el parquin para guardarlo en la db
@@ -255,6 +257,21 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         //genera el mensaje correspondiente
         hashMap.put("mensaje","el socio "+members.getFirstName()+" "+members.getFirstName()+" "+
                 " fue asignado al parqueadero "+parking.getName());
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<String, String> disconnectMemberToParking(Long parkingId) {
+        //busca parking correspondiente al id
+        Parking parking = repositoryDesguace.findParkingById(parkingId);
+        if(parking.getMembersId()==null){
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"socio vinculado al parqueadero id "+parkingId);
+        }
+        parking.setMembersId(null);
+        parkingRepository.save(parking);
+        HashMap<String, String> hashMap = new HashMap<>();
+        //genera el mensaje correspondiente
+        hashMap.put("mensaje","se desvinculo socio del parqueadero id "+parkingId);
         return hashMap;
     }
 
@@ -278,7 +295,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> UpdateMember(Members members) {
-        repositoryDesguace.findMemberById(members.getId());
+        Members members1 = repositoryDesguace.findMemberById(members.getId());
+
         if(repositoryDesguace.FindIfDocumentIsInUse(members.getDocument(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"documento ya esta en uso");
         }
@@ -288,6 +306,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         if(repositoryDesguace.FindIfPhoneIsInUse(members.getPhone(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
         }
+        members.setCreateOn(members1.getCreateOn());
         membersRepository.save(members);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -309,7 +328,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             });
             vehicleRepository.deleteById(x);
         });
-        Long parkingId = repositoryDesguace.FindMemberInParking(members.getId());
+        Long parkingId = repositoryDesguace.FindMemberInParkingsByMember(members.getId());
+        System.out.println(parkingId);
         if(parkingId!=0){
             Parking parking = repositoryDesguace.findParkingById(parkingId);
             parking.setMembersId(null);
@@ -325,6 +345,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterVehicle(Vehicle vehicle) {
+        vehicle.setLicensePlate(vehicle.getLicensePlate().toUpperCase());
         if(repositoryDesguace.FindIfLicensePlateIsInUse(vehicle.getLicensePlate(), vehicle.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"placa ya esta en uso");
         }
@@ -372,7 +393,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> UpdateParking(Parking parking) {
         Parking p = repositoryDesguace.FindParkingById(parking.getId());
+        parking.setMembersId(p.getMembersId());
         parking.setCurrentCapacity(p.getCurrentCapacity());
+        parking.setCreateOn(p.getCreateOn());
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");

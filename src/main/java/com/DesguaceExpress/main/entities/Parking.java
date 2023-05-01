@@ -135,4 +135,8 @@ public class Parking implements Serializable {
     public void setMembersId(Members membersId) {
         this.membersId = membersId;
     }
+
+    public void setCreateOn(LocalDateTime createOn) {
+        this.createOn = createOn;
+    }
 }

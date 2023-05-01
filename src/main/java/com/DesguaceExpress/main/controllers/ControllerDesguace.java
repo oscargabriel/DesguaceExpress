@@ -126,6 +126,7 @@ public interface ControllerDesguace {
 
     public ResponseEntity<HashMap<String, String>> LinkMemberToParking(MemberToParking membertoparking);
 
+    public ResponseEntity<HashMap<String, String>> disconnectMemberToParking(HashMap<String, Long>  parkingId);
 
     public ResponseEntity<HashMap<String, String>> RegisterParking(Parking parking);
 

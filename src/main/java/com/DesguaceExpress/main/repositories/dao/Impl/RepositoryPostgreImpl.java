@@ -80,7 +80,6 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                 "FROM Parking p " +
                         "WHERE p.id=:id",Parking.class);
         query.setParameter("id",id);
-        System.err.println("no mames");
         Parking parking=null;
         try {
             parking = query.getSingleResult();
@@ -180,7 +179,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         try {
             member = query.getSingleResult();
         }catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"documento "+memberDocument+" no encontrado");
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"documento "+memberDocument);
         }
         return member;
     }
@@ -246,7 +245,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         try {
             vehicle = query.getSingleResult();
         }catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo con id"+ id);
+            throw new DataNotFound(HttpStatus.NOT_FOUND,"vehiculo con id "+ id);
         }
         return vehicle;
     }
@@ -348,7 +347,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                         "JOIN Vehicle v ON v.id=vp.vehicleId " +
                         "JOIN Members m ON m.id=v.membersId " +
                         "JOIN Parking p ON vp.parkingId=p.id " +
-                        "WHERE vp.exit IS NOT NULL AND p.id=:id " +
+                        "WHERE p.id=:id " +
                         "GROUP BY v.id, v.licensePlate, v.type, v.make, v.model, CONCAT(m.firstName, ' ',m.lastName), m.document " +
                         "ORDER BY count(v.id) desc, v.licensePlate " +
                         "limit 10 ", Object[].class
@@ -592,6 +591,22 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                 "SELECT p.id " +
                         "From Parking p " +
                         "WHERE p.id=:id and p.membersId is not null ",Long.class
+        );
+        query.setParameter("id",id);
+        try {//si esta ocupado retorna true, caso contrario retorna false
+            return query.getSingleResult();
+        }catch (NoResultException e){
+            return 0L;
+        }
+    }
+
+    @Override
+    public Long FindMemberInParkingsByMember(Long id) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT p.id " +
+                        "From Parking p " +
+                        "JOIN Members m ON p.membersId=m.id " +
+                        "WHERE m.Id=:id and p.membersId is not null ",Long.class
         );
         query.setParameter("id",id);
         try {//si esta ocupado retorna true, caso contrario retorna false

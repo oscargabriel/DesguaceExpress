@@ -17,7 +17,10 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @Audited
-@Table(name = "vehicle")
+@Table(name = "vehicle", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_license_plate", columnNames = "license_plate")
+
+})
 public class Vehicle implements Serializable {
 
     @Id

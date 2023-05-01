@@ -128,6 +128,14 @@ public interface ServiceDesguace {
      */
     public HashMap<String, String> LinMemberToParking(MemberToParking membertoparking);
 
+    /**
+     * desvincula el socio que pueda tener un parqueadero, si no hay socios devuelve un throw informando que
+     * no hay socios vinculados
+     * @param parkingId Long parking
+     * @return mensaje positivo si los datos son correctos
+     */
+    public HashMap<String, String> disconnectMemberToParking(Long parkingId);
+
 
     public HashMap<String, String> RegisterMember(@RequestBody Members members);
 

@@ -51,7 +51,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @GetMapping("api/VehiculosDeSociosEnParqueaderos/{memberDocument}")
     public ResponseEntity<List<VehicleInParkingByMembers>> findVehiclesByMember(@PathVariable String memberDocument) {
-        System.out.println(memberDocument);
         lexicalAnalyzer.validateRegularExpression(memberDocument,"document",false);
         return ResponseEntity.ok().body(serviceDesguace.findVehiclesByMember(memberDocument));
     }
@@ -108,7 +107,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @GetMapping("api/DatosParciales")
     public ResponseEntity<List<VehicleByParking>> VehiclesInAParkingByPartialData(@RequestBody PartialData partialData) {
-        System.out.println();
         lexicalAnalyzer.validateRegularExpression(partialData.getParkingId(),"id",false);
         lexicalAnalyzer.validateRegularExpression(partialData.getDateEnd(),"date",true);
         lexicalAnalyzer.validateRegularExpression(partialData.getDateInit(),"date",true);
@@ -192,6 +190,14 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
         lexicalAnalyzer.validateRegularExpression(membertoparking.getMembersId(),"id",false);
         lexicalAnalyzer.validateRegularExpression(membertoparking.getParkingId(),"id",false);
         return ResponseEntity.ok().body(serviceDesguace.LinMemberToParking(membertoparking));
+    }
+
+    @Override
+    @PutMapping("parqueadero/desvincularSocio")
+    public ResponseEntity<HashMap<String, String>> disconnectMemberToParking(@RequestBody HashMap<String, Long> parkingId) {
+
+        lexicalAnalyzer.validateRegularExpression(parkingId.get("parkingId"),"parkingId",false);
+        return ResponseEntity.ok().body(serviceDesguace.disconnectMemberToParking(parkingId.get("parkingId")));
     }
 
     @Override

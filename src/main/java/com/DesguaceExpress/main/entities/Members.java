@@ -18,14 +18,18 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @Audited
-@Table(name = "members")
+@Table(name = "members", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_document", columnNames = "document"),
+        @UniqueConstraint(name = "uk_phone", columnNames = "phone"),
+        @UniqueConstraint(name = "uk_email", columnNames = "email")
+})
 public class Members implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "document", nullable = false, unique = true)
+    @Column(name = "document", nullable = false)
     private String document;
 
 
@@ -35,10 +39,10 @@ public class Members implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone", nullable = false)
     private Long phone;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "create_on", nullable = true)
@@ -109,6 +113,9 @@ public class Members implements Serializable {
         return createOn;
     }
 
+    public void setCreateOn(LocalDateTime createOn) {
+        this.createOn = createOn;
+    }
 
     @Override
     public String toString() {
