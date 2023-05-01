@@ -237,15 +237,18 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> LinMemberToParking(MemberToParking membertoparking) {
-        if(repositoryDesguace.FindMemberInParking(membertoparking.getParkingId())){
+        if(repositoryDesguace.FindMemberInParking(membertoparking.getParkingId())!=0L){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"plaza disponible para el parqueadero");
         }
         //busca socio correspondiente al id
+
         Members members = repositoryDesguace.findMemberById(membertoparking.getMembersId());
         //busca parking correspondiente al id
+
         Parking parking = repositoryDesguace.findParkingById(membertoparking.getParkingId());
+
         //guarda el socio en el parquin para guardarlo en la db
-        parking.setMembersId(members.getId());
+        parking.setMembersId(members);
         //guarda el parking actualizado con el nuevo socio
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -306,6 +309,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             });
             vehicleRepository.deleteById(x);
         });
+        Long parkingId = repositoryDesguace.FindMemberInParking(members.getId());
+        if(parkingId!=0){
+            Parking parking = repositoryDesguace.findParkingById(parkingId);
+            parking.setMembersId(null);
+            parkingRepository.save(parking);
+        }
         //elimina al socio
         membersRepository.delete(members);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -345,7 +354,9 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterParking(Parking parking) {
-        Members members = repositoryDesguace.findMemberById(parking.getMembersId());
+        if(parking.getMembersId()!=null){
+            Members members = repositoryDesguace.findMemberById(parking.getMembersId().getId());
+        }
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parqueadero ya esta en uso");
         }

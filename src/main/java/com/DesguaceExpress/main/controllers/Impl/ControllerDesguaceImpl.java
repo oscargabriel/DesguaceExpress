@@ -191,7 +191,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     public ResponseEntity<HashMap<String, String>> LinkMemberToParking(@RequestBody MemberToParking membertoparking) {
         lexicalAnalyzer.validateRegularExpression(membertoparking.getMembersId(),"id",false);
         lexicalAnalyzer.validateRegularExpression(membertoparking.getParkingId(),"id",false);
-
         return ResponseEntity.ok().body(serviceDesguace.LinMemberToParking(membertoparking));
     }
 
@@ -203,7 +202,7 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
         lexicalAnalyzer.validateRegularExpression(parking.getMaxCapacity(),"maxCapacity",false);
         lexicalAnalyzer.validateRegularExpression(parking.getCostHour(),"costHour",false);
         lexicalAnalyzer.validateRegularExpression(parking.getLocationId().getId(),"locationId",false);
-        lexicalAnalyzer.validateRegularExpression(parking.getMembersId(),"membersId",true);
+        //lexicalAnalyzer.validateRegularExpression(parking.getMembersId().getId(),"membersId",true);
         return ResponseEntity.ok().body(serviceDesguace.RegisterParking(parking));
     }
 

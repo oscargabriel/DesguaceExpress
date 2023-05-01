@@ -22,8 +22,9 @@ import java.time.LocalDateTime;
 public class Members implements Serializable {
 
     @Id
-    private Long id;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "document", nullable = false, unique = true)
     private String document;
 

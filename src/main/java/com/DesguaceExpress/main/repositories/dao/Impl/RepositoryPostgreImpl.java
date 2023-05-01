@@ -80,6 +80,7 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
                 "FROM Parking p " +
                         "WHERE p.id=:id",Parking.class);
         query.setParameter("id",id);
+        System.err.println("no mames");
         Parking parking=null;
         try {
             parking = query.getSingleResult();
@@ -586,17 +587,17 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
     }
 
     @Override
-    public Boolean FindMemberInParking(Long id) {
+    public Long FindMemberInParking(Long id) {
         TypedQuery<Long> query = entityManager.createQuery(
-                "SELECT p.membersId " +
+                "SELECT p.id " +
                         "From Parking p " +
-                        "WHERE p.id=:id ",Long.class
+                        "WHERE p.id=:id and p.membersId is not null ",Long.class
         );
         query.setParameter("id",id);
         try {//si esta ocupado retorna true, caso contrario retorna false
-            return query.getSingleResult() != null;
+            return query.getSingleResult();
         }catch (NoResultException e){
-            throw new DataNotFound(HttpStatus.NOT_FOUND,"parqueadero id "+id);
+            return 0L;
         }
     }
 

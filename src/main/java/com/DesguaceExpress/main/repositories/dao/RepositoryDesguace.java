@@ -199,7 +199,7 @@ public interface RepositoryDesguace {
      * @param id Long ParkingId
      * @return Boolean true si hay y false si no hay
      */
-    public Boolean FindMemberInParking(Long id);
+    public Long FindMemberInParking(Long id);
 
     /**
      * buscar todos los vehiculos que le pertenecen a un socio

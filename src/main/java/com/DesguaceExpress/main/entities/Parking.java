@@ -1,5 +1,6 @@
 package com.DesguaceExpress.main.entities;
 
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,14 +19,18 @@ import java.util.Date;
 @AllArgsConstructor
 @Audited
 @ToString
-@Table(name = "parking")
+@Table(name = "parking", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_name", columnNames = "name"),
+        @UniqueConstraint(name = "uk_members_id", columnNames = "members_id")
+
+})
 public class Parking implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "current_capacity", nullable = false)
@@ -47,14 +52,21 @@ public class Parking implements Serializable {
     private Location locationId;
 
     //@OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "members_id",
-            foreignKey = @ForeignKey(name = "fk_parking_members"), nullable = true)
-    private Long membersId;
+            foreignKey = @ForeignKey(name = "fk_parking_members"), nullable = true, insertable = false)
+    private Members membersId;
 
+
+    @PreRemove
+    private void predestroy(){
+        membersId=null;
+        locationId=null;
+    }
     public Parking() {
     }
 
-    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, Location locationId, Long membersId) {
+    public Parking(Long id, String name, Integer currentCapacity, Integer maxCapacity, Float costHour, Location locationId, Members membersId) {
         this.id = id;
         this.name = name;
         this.currentCapacity = currentCapacity;
@@ -116,11 +128,11 @@ public class Parking implements Serializable {
         this.locationId = locationId;
     }
 
-    public Long getMembersId() {
+    public Members getMembersId() {
         return membersId;
     }
 
-    public void setMembersId(Long membersId) {
+    public void setMembersId(Members membersId) {
         this.membersId = membersId;
     }
 }
