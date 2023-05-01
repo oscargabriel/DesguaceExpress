@@ -13,15 +13,11 @@ import java.util.List;
  */
 public interface RepositoryDesguace {
 
-    //regresar los 10 vehículos que más veces se han registrado en los diferentes
-    // parqueaderos y cuantas veces han sido
-
     /**
      * busca los 10 vehiculos que mas han registrado entradas en la tabla VehicleParking y los retorna a service
      * @return lista tipo Top10VehicleInParking
      */
     public List<Top10VehicleInParking> TopVehicleInParking();
-
 
     /**
      * busca un vehiculo en la bd dado una placa, si no la encuentra genera una excepcion y ExcepcionController
@@ -195,16 +191,18 @@ public interface RepositoryDesguace {
     public List<VehicleByParking> QueryDataPartial(TypedQuery<Object[]> query, Long id);
 
     /**
-     * busca si un parqueadero tiene socios viculados
+     * busca si el parqueadero que corresponda la id que recibe por parametro
+     * tiene socios viculados si es positivo retorna el numero del parqueadero caso contrario retorna un 0
      * @param id Long ParkingId
-     * @return Boolean true si hay y false si no hay
+     * @return Long id de parqueadero
      */
     public Long FindMemberInParking(Long id);
 
     /**
-     * busca si un
+     * busca si un socio esta vinculado a un parqueadero y retorna el id del parqueadero, si no esta vinculado
+     * retorna un 0
      * @param id Long ParkingId
-     * @return Boolean true si hay y false si no hay
+     * @return Long 0 o el id del parqueadero vinculado
      */
     public Long FindMemberInParkingsByMember(Long id);
 
@@ -228,15 +226,49 @@ public interface RepositoryDesguace {
 
     public Parking FindParkingById(Long id);
 
-
+    /**
+     * busca si una placa esta en uso y retorna true si esta en uso, false si esta disponible o si pertenece
+     * al mismo id que esta haciendo modificaciones
+     * @param licensePlate String
+     * @param id Long
+     * @return false si se puede asignar o reasignar, true si no se peude asignar
+     */
     public Boolean FindIfLicensePlateIsInUse(String licensePlate, Long id);
 
+    /**
+     * busca si un documento esta en uso y retorna true si esta en uso, false si esta disponible o si pertenece
+     * al mismo id que esta haciendo modificaciones
+     * @param document String
+     * @param id Long
+     * @return false si se puede asignar o reasignar, true si no se peude asignar
+     */
     public Boolean FindIfDocumentIsInUse(String document, Long id);
 
+    /**
+     * busca si un email esta en uso y retorna true si esta en uso, false si esta disponible o si pertenece
+     * al mismo id que esta haciendo modificaciones
+     * @param email String
+     * @param id Long
+     * @return false si se puede asignar o reasignar, true si no se peude asignar
+     */
     public Boolean FindIfEmailIsInUse(String email, Long id);
 
+    /**
+     * busca si un telefono esta en uso y retorna true si esta en uso, false si esta disponible o si pertenece
+     * al mismo id que esta haciendo modificaciones
+     * @param phone String
+     * @param id Long
+     * @return false si se puede asignar o reasignar, true si no se peude asignar
+     */
     public Boolean FindIfPhoneIsInUse(Long phone, Long id);
 
+    /**
+     * busca si un nombre de parqueadero esta en uso y retorna true si esta en uso, false si esta disponible
+     * o si pertenece al mismo id que esta haciendo modificaciones
+     * @param parkingName String
+     * @param id Long
+     * @return false si se puede asignar o reasignar, true si no se peude asignar
+     */
     public Boolean FindIfParkingNameIsInUse(String parkingName, Long id);
 
 }

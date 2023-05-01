@@ -97,15 +97,11 @@ public interface ControllerDesguace {
 
     public ResponseEntity<HashMap<String, String>> RegisterMember(Members members);
 
-
     public ResponseEntity<HashMap<String, String>> UpdateMember(Members members);
-
 
     public ResponseEntity<HashMap<String, String>> DeleteMember(Long id);
 
-
     public ResponseEntity<HashMap<String, String>> RegisterVehicle(Vehicle vehicle);
-
 
     public ResponseEntity<HashMap<String, String>> DeleteVehicle(Long id);
 
@@ -123,19 +119,26 @@ public interface ControllerDesguace {
      */
     public ResponseEntity<HashMap<String, String>> RegistrarSalida(Tiket tiket);
 
-
+    /**
+     * vincula un socio a un parqueadero
+     * @param membertoparking paringId memberId
+     * @return mensaje positivo
+     */
     public ResponseEntity<HashMap<String, String>> LinkMemberToParking(MemberToParking membertoparking);
 
+    /**
+     * desvincula un socio de un parqueadero
+     * @param parkingId id del parqueadero
+     * @return mensaje positivo
+     */
     public ResponseEntity<HashMap<String, String>> disconnectMemberToParking(HashMap<String, Long>  parkingId);
+
 
     public ResponseEntity<HashMap<String, String>> RegisterParking(Parking parking);
 
-
     public ResponseEntity<HashMap<String, String>> UpdateParking(Parking parking);
 
-
     public ResponseEntity<HashMap<String, String>> DeleteParking(Long id);
-
 
     public ResponseEntity<HashMap<String, String>> RegisterLocation(Location location);
 

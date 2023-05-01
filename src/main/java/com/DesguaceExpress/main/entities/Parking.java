@@ -58,7 +58,7 @@ public class Parking implements Serializable {
     private Members membersId;
 
 
-    @PreRemove
+    @PreRemove//antes de borrarse hace null member y locaction para evitar problemas de cascada
     private void predestroy(){
         membersId=null;
         locationId=null;

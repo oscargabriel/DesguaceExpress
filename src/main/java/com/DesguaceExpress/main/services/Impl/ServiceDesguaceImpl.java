@@ -277,12 +277,15 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterMember(Members members) {
+        //verifica que el documento no este en uso
         if(repositoryDesguace.FindIfDocumentIsInUse(members.getDocument(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"documento ya esta en uso");
         }
+        //verifica que el email no este en uso
         if(repositoryDesguace.FindIfEmailIsInUse(members.getEmail(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"email ya esta en uso");
         }
+        //verifica que el phone no este en uso
         if(repositoryDesguace.FindIfPhoneIsInUse(members.getPhone(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
         }
@@ -328,8 +331,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             });
             vehicleRepository.deleteById(x);
         });
+        //busca si hay un parqueadero vinculado lo busca y deja el campo null
         Long parkingId = repositoryDesguace.FindMemberInParkingsByMember(members.getId());
-        System.out.println(parkingId);
         if(parkingId!=0){
             Parking parking = repositoryDesguace.findParkingById(parkingId);
             parking.setMembersId(null);
@@ -382,6 +385,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parqueadero ya esta en uso");
         }
         parking.setCurrentCapacity(0);
+        parking.setMembersId(null);//se deja nulo y se añade por aparte el socio
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -393,10 +397,10 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     @Override
     public HashMap<String, String> UpdateParking(Parking parking) {
         Parking p = repositoryDesguace.FindParkingById(parking.getId());
-        parking.setMembersId(p.getMembersId());
-        parking.setCurrentCapacity(p.getCurrentCapacity());
-        parking.setCreateOn(p.getCreateOn());
-        parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
+        parking.setMembersId(p.getMembersId());//mantiene el socio
+        parking.setCurrentCapacity(p.getCurrentCapacity());//mantiene los vehiculos
+        parking.setCreateOn(p.getCreateOn());//mantiene la fecha de creacion
+        parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));//busca la locacion por id
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
         }

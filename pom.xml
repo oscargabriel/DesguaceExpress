@@ -17,37 +17,43 @@
 		<java.version>19</java.version>
 	</properties>
 	<dependencies>
+		<!--dependencia para la coneccion con la base de datos-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!--dependencia para el uso de caracteristicas web como mensajes http-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<!--dependencia para mantener la aplicacion corriendo hassta que falle o se detenga de forma manual-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
+		<!--dependencia para hacer la coneccion con la base de datos postgreSQL-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!--dependencia para habilitar anotaciones para las clase de entidad para creacion automatica de
+		constructores, getter, setter, toString y bulider-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!--dependencia para los test de spring boot-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<!--dependencia para el uso de hibernate para mayor control en las conecciones con la base de datos-->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-envers</artifactId>

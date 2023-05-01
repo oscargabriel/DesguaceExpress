@@ -774,6 +774,4 @@ public class RepositoryPostgreImpl implements RepositoryDesguace {
         }
         return !Objects.equals(l, id);
     }
-
-
 }

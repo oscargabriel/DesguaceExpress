@@ -56,14 +56,10 @@ public class VehicleParking implements Serializable {
     /**
      * asigna la infomacion de ingreso automaticamente al ingresar al parqueadero
      */
-    @PrePersist
+    @PrePersist //antes de crear guarda la fecha y hora
     private void prePersist(){
         this.entry= LocalDateTime.now();
     }
 
-    @PreUpdate
-    private void preUpdate(){
-
-    }
 
 }
