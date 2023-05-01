@@ -26,7 +26,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
 
     ServiceDesguace serviceDesguace;
 
-
     LexicalAnalyzer lexicalAnalyzer=new LexicalAnalyzer();
 
     public ControllerDesguaceImpl(ServiceDesguaceImpl serviceDesguace) {
