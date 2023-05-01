@@ -88,7 +88,7 @@ public class LexicalAnalyzer {
         switch (tipo) {
             case "id", "parkingId", "locationId", "memebersId" -> regex = "^([0-9]{1,100000000})$";
             case "currentCapacity", "maxCapacity" -> regex = "^([0-9]{1,1000})$";
-            case "costHour" -> regex = "^([0-9]{1,100000000})([.]{0,1})([0-9]{1,100})$";
+            case "costHour" -> regex = "^([0-9]{1,100000000})([.]{0,1})([0-9]{0,100})$";
             case "email" -> regex = "^([A-Za-z0-9]{1})([-_\\.A-Za-z0-9]{0,})([A-Za-z0-9]{1})@([A-Za-z0-9 \\.]+)*([A-Za-z]{2,})$";
             case "licensePlate" -> regex = "^([A-Za-z0-9]{6})$";
             case "phone" -> regex = "^([0-9]{3,})$";

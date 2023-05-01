@@ -50,7 +50,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     Logger logger = LoggerFactory.getLogger(ServiceDesguaceImpl.class);
 
-
     public ServiceDesguaceImpl(RepositoryPostgreImpl repositoryDesguace,
                                ServiceSendEmailImpl serviceSendEmail) {
         this.repositoryDesguace = repositoryDesguace;
@@ -223,7 +222,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
                     LocalDateTime.parse(partialData.getDateEnd()+" 00:00:00", formateador)
             );
         }
-
         if(indicador==111){//proporciono todos los datos
             partialData.setPartialLicensePlate(partialData.getPartialLicensePlate().toUpperCase());
             return repositoryDesguace.findVehicleByParkingIdAndDataPartial(
@@ -248,11 +246,12 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         Members members = repositoryDesguace.findMemberById(membertoparking.getMembersId());
         //busca parking correspondiente al id
         Parking parking = repositoryDesguace.findParkingById(membertoparking.getParkingId());
-
         //guarda el socio en el parquin para guardarlo en la db
         parking.setMembersId(members);
         //guarda el parking actualizado con el nuevo socio
         parkingRepository.save(parking);
+        logger.info("el socio "+members.getFirstName()+" "+members.getFirstName()+" "+
+                " fue asignado al parqueadero "+parking.getName());
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","el socio "+members.getFirstName()+" "+members.getFirstName()+" "+
@@ -267,6 +266,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         if(parking.getMembersId()==null){
             throw new DataNotFound(HttpStatus.NOT_FOUND,"socio vinculado al parqueadero id "+parkingId);
         }
+        logger.info("se desvinculo socio del parqueadero id "+parkingId);
         parking.setMembersId(null);
         parkingRepository.save(parking);
         HashMap<String, String> hashMap = new HashMap<>();
@@ -289,7 +289,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         if(repositoryDesguace.FindIfPhoneIsInUse(members.getPhone(),members.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
         }
-        membersRepository.save(members);
+        Members m = membersRepository.save(members);
+        logger.info("se creo al socio "+m.toString());
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","socio creado");
@@ -310,7 +311,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             throw new DataIsInUse(HttpStatus.CONFLICT,"telefono ya esta en uso");
         }
         members.setCreateOn(members1.getCreateOn());
-        membersRepository.save(members);
+        Members m = membersRepository.save(members);
+        logger.info("se actualizo al socio "+m.toString());
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se actualizo el socio ");
@@ -339,6 +341,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
             parkingRepository.save(parking);
         }
         //elimina al socio
+        logger.info("se elimino al socio "+members.toString());
         membersRepository.delete(members);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -354,7 +357,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         }
         Members members = repositoryDesguace.findMemberById(vehicle.getMembersId().getId());
         vehicle.setMembersId(members);
-        vehicleRepository.save(vehicle);
+        Vehicle v = vehicleRepository.save(vehicle);
+        logger.info("se registro vehiculo "+v.toString());
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se creo el vehiculo ");
@@ -363,12 +367,13 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> DeleteVehicle(Long id) {
-        repositoryDesguace.FindVehicleById(id);
+        Vehicle v = repositoryDesguace.FindVehicleById(id);
         repositoryDesguace.FindVehicleParkingIdByMemberId(id).forEach(x->
         {
             //busca los registros y los borra
             vehicleParkingRepository.deleteById(x);
         });
+        logger.info("se elimino vehiculo "+v.toString());
         vehicleRepository.deleteById(id);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -387,7 +392,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         parking.setCurrentCapacity(0);
         parking.setMembersId(null);//se deja nulo y se añade por aparte el socio
         parking.setLocationId(repositoryDesguace.FindLocationById(parking.getLocationId().getId()));
-        parkingRepository.save(parking);
+        Parking p = parkingRepository.save(parking);
+        logger.info("se creo nuevo parqueadero"+p.toString());
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se creo el nuevo parqueadero ");
@@ -404,7 +410,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         if(repositoryDesguace.FindIfParkingNameIsInUse(parking.getName(),parking.getId())){
             throw new DataIsInUse(HttpStatus.CONFLICT,"nombre del parquien ya esta en uso");
         }
-        parkingRepository.save(parking);
+        Parking loggerp=parkingRepository.save(parking);
+        logger.info("se actualizo parqueadero "+loggerp);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se actualizo el parqueadero ");
@@ -413,7 +420,8 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> DeleteParking(Long id) {
-        repositoryDesguace.FindParkingById(id);
+        Parking p = repositoryDesguace.FindParkingById(id);
+        logger.info("se elimino parking"+ p.toString());
         parkingRepository.deleteById(id);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
@@ -423,10 +431,11 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
 
     @Override
     public HashMap<String, String> RegisterLocation(Location location) {
-        locationRepository.save(location);
+        Location l = locationRepository.save(location);
         HashMap<String, String> hashMap = new HashMap<>();
         //genera el mensaje correspondiente
         hashMap.put("mensaje","se añadio la locacion ");
+        logger.info("se creo location "+l.toString());
         return hashMap;
     }
 }
