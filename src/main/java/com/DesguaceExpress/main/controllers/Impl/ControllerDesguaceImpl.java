@@ -192,7 +192,6 @@ public class ControllerDesguaceImpl implements ControllerDesguace {
     @Override
     @PutMapping("parqueadero/desvincularSocio")
     public ResponseEntity<HashMap<String, String>> disconnectMemberToParking(@RequestBody HashMap<String, Long> parkingId) {
-
         lexicalAnalyzer.validateRegularExpression(parkingId.get("parkingId"),"parkingId",false);
         return ResponseEntity.ok().body(serviceDesguace.disconnectMemberToParking(parkingId.get("parkingId")));
     }

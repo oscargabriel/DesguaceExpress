@@ -88,7 +88,6 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
                     "No se puede Registrar Ingreso, el parqueadero esta lleno"
             );
         }
-
         HashMap<String,Long> hashMap = new HashMap<>();
         vehicleParking.getParkingId().setCurrentCapacity(vehicleParking.getParkingId().getCurrentCapacity()+1);
         parkingRepository.save(vehicleParking.getParkingId());
@@ -100,7 +99,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
     public HashMap<String, String> RegistrarSalida(String licensePlate, Long idParking) {
         licensePlate=licensePlate.toUpperCase();
         VehicleParking vehicleParking = repositoryDesguace.findRegisterOpenByLicencePlate(licensePlate);
-
+        //busca que exista un registro abierto del parqueadero
         if(vehicleParking==null){
             throw new VehicleRegistryIsBad(
                     HttpStatus.BAD_REQUEST,
@@ -116,6 +115,7 @@ public class ServiceDesguaceImpl implements ServiceDesguace {
         }
         vehicleParking.getParkingId().setCurrentCapacity(vehicleParking.getParkingId().getCurrentCapacity()-1);
         vehicleParking.setExit(LocalDateTime.now());
+        //hace el calculo del costo por las horas que estubo en el parqueadero y lo guarda
         vehicleParking.setCost(
                 ChronoUnit.HOURS.between(vehicleParking.getEntry(), vehicleParking.getExit())
                         *vehicleParking.getParkingId().getCostHour()
